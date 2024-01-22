@@ -5,6 +5,7 @@
     box-sizing: border-box;
 }
 
+/* A Hero Image is a large image with text, often placed at the top of a webpage */
 .hero {
     width: 100%;
     min-height: 100vh;
