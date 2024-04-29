@@ -35,7 +35,10 @@ $(document).ready(function() {
                     imgWidth = this.width;
                     console.log("original Width = " + imgWidth);
                     imgHeight = this.height;
-                    console.log("original Height = " + imgHeight);   
+                    console.log("original Height = " + imgHeight);
+                    // gets the absolute value of the 'backgroundImage' div that is created when an image is imported.    
+                    console.log(document.getElementById('backgroundImage').offsetWidth);
+
                 };
     
                 //throws an error if the file is not an image
