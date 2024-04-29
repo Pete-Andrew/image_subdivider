@@ -13,6 +13,9 @@
         <label for="inputFile" id="dropArea">
             <input type="file" accept="image/*" id="inputFile" hidden>
             <div id="imageView">
+
+                <div id="verticalLine"></div> <!-- Add this line for the vertical line -->
+
                 <div id="backgroundImage"></div>
                 <p>Drag and drop or click here <br> to upload image</p>
                 <span>Upload and images from desktop</span>
@@ -22,8 +25,14 @@
 
     <div>
         <button id="toggleButton" class="toggle-button">Enable Manual Move</button>
-        <label for="scaleSlider">Adjust Scale:</label>
+        <button id="gridToggleButton" class="toggle-button">Hide Grid</button>
+        <button id="toggleButton" class="toggle-button">Re-center</button>
+
+        <label for="scaleSlider">Adjust Image Scale:</label>
         <input type="range" min="0.1" max="2" step="0.1" value="1" class="slider" id="scaleSlider">
+
+        <label for="verticleGridLines">Number of Verticle Grid Lines:</label>
+        <input type="range" min="0" max="30" step="5" value="1" class="slider" id="scaleSlider">
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

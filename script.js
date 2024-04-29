@@ -4,6 +4,12 @@ $(document).ready(function() {
     const imageView = document.getElementById("imageView");
     const backgroundImage = document.getElementById("backgroundImage");
     const toggleButton = document.getElementById("toggleButton");
+    const gridToggleButton = document.getElementById("gridToggleButton");
+    const verticalLine = document.getElementById("verticalLine");
+    const imageViewWidth = document.getElementById("imageView").offsetWidth;
+
+    let imgWidth = 0;
+    let imgHeight = 0;
     let scaleFactor = 1;
     let isDragging = false;
     let initialX;
@@ -12,7 +18,8 @@ $(document).ready(function() {
     let offsetY = 0;
     let manualMoveEnabled = false;
     let clickHereToUpload = true;
-    
+    let showGrid = true;
+      
     // Get the size of the input image
     function getSize () {
         //uses jquery to get the inputFile ID and calls the following function on change event, $("#inputFile") is a jquery selector that selects a HTML element 
@@ -24,8 +31,11 @@ $(document).ready(function() {
     
                 //logs the size of the imported image into the console. 
                 img.onload = function() {
-                    console.log("original Width = " + this.width);
-                    console.log("original Height = " + this.height);
+
+                    imgWidth = this.width;
+                    console.log("original Width = " + imgWidth);
+                    imgHeight = this.height;
+                    console.log("original Height = " + imgHeight);   
                 };
     
                 //throws an error if the file is not an image
@@ -53,18 +63,23 @@ $(document).ready(function() {
         }
     });
 
-    // Function to update background image scale
-    function updateBackgroundScale(scale) {
-        scaleFactor = scale;
-        let translateX = offsetX - (backgroundImage.offsetWidth / 2);
-        let translateY = offsetY - (backgroundImage.offsetHeight / 2);
-        backgroundImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+
+// Function to update background image scale
+function updateBackgroundScale(scale) {
+    scaleFactor = scale;
+    let translateX = offsetX - (backgroundImage.offsetWidth / 2);
+    let translateY = offsetY - (backgroundImage.offsetHeight / 2);
+    backgroundImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+    console.log("scale Factor = " + scaleFactor);
+    console.log("imgWidth*scaleFactor = " + imgWidth*scaleFactor);
     }
+
 
     // Event listener for scale slider change
     $("#scaleSlider").on("input", function() {
         let scale = $(this).val();
         updateBackgroundScale(scale);
+        
     });
 
     // Event listeners for mouse events to enable dragging
@@ -143,6 +158,24 @@ $(document).ready(function() {
         } else {
             inputFile.setAttribute("id", "inputFile");
         }
+    });
+
+// making the grid! 
+
+    gridToggleButton.addEventListener("click", function() {
+        showGrid = !showGrid;
+        gridToggleButton.textContent = showGrid ? "Hide Grid" : "Show Grid";
+    });
+
+
+// Inside the document.ready function after other DOM manipulations
+// Position the line at the center of the imageView
+verticalLine.style.left = `${imageViewWidth / 2}px`; 
+
+// Update the line position on window resize (optional)
+window.addEventListener("resize", function() {
+    const newImageViewWidth = document.getElementById("imageView").offsetWidth;
+    verticalLine.style.left = `${newImageViewWidth / 2}px`;
 
     });
 });

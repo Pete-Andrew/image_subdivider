@@ -74,3 +74,13 @@ canvas {
     border-radius: 5px;
     cursor: pointer;
 }
+
+#verticalLine {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1px; /* Width of the line */
+    height: 100%; /* Height of the line */
+    background-color: black; /* Color of the line */
+    z-index: 2; /* Ensure the line is above the image */
+}
