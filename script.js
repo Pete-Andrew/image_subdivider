@@ -1,74 +1,148 @@
-const dropArea = document.getElementById("dropArea");
-const inputFile = document.getElementById("inputFile");
-const imageView = document.getElementById("imageView");
+$(document).ready(function() {
+    const dropArea = document.getElementById("dropArea");
+    const inputFile = document.getElementById("inputFile");
+    const imageView = document.getElementById("imageView");
+    const backgroundImage = document.getElementById("backgroundImage");
+    const toggleButton = document.getElementById("toggleButton");
+    let scaleFactor = 1;
+    let isDragging = false;
+    let initialX;
+    let initialY;
+    let offsetX = 0;
+    let offsetY = 0;
+    let manualMoveEnabled = false;
+    let clickHereToUpload = true;
+    
+    // Get the size of the input image
+    function getSize () {
+        //uses jquery to get the inputFile ID and calls the following function on change event, $("#inputFile") is a jquery selector that selects a HTML element 
+        $("#inputFile").change(function(e) {
+            var file, img;
+    
+            if ((file = this.files[0])) {
+                img = new Image();
+    
+                //logs the size of the imported image into the console. 
+                img.onload = function() {
+                    console.log("original Width = " + this.width);
+                    console.log("original Height = " + this.height);
+                };
+    
+                //throws an error if the file is not an image
+                img.onerror = function() {
+                    alert( "not a valid file: " + file.type);
+                };
+    
+                img.src = URL.createObjectURL(file);
+            }
+        });
+    };   
+    
+    getSize();
 
+    // Function to handle image upload
+    function uploadImage(file) {
+        let imgLink = URL.createObjectURL(file);
+        backgroundImage.style.backgroundImage = `url(${imgLink})`;
+    }
 
-function getSize () {
-    //uses jquery to get the inputFile ID and calls the following function on change event, $("#inputFile") is a jquery selector that selects a HTML element 
-    $("#inputFile").change(function(e) {
-        var file, img;
-
-        if ((file = this.files[0])) {
-            img = new Image();
-
-            //logs the size of the imported image into the console. 
-            img.onload = function() {
-                console.log("Width = " + this.width);
-                console.log("Height = " + this.height);
-            };
-
-            //throws an error if the file is not an image
-            img.onerror = function() {
-                alert( "not a valid file: " + file.type);
-            };
-
-            img.src = URL.createObjectURL(file);
+    // Event listener for file input change
+    inputFile.addEventListener("change", function() {
+        if (this.files.length > 0) {
+            uploadImage(this.files[0]);
         }
     });
-};
 
-getSize();
+    // Function to update background image scale
+    function updateBackgroundScale(scale) {
+        scaleFactor = scale;
+        let translateX = offsetX - (backgroundImage.offsetWidth / 2);
+        let translateY = offsetY - (backgroundImage.offsetHeight / 2);
+        backgroundImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+    }
 
+    // Event listener for scale slider change
+    $("#scaleSlider").on("input", function() {
+        let scale = $(this).val();
+        updateBackgroundScale(scale);
+    });
 
-//an event listiner that on a change to the variable inputFile (which targets the 'inputFile' ID)
-inputFile.addEventListener("change", uploadImage);
+    // Event listeners for mouse events to enable dragging
+    imageView.addEventListener("mousedown", startDragging);
+    imageView.addEventListener("mousemove", drag);
+    imageView.addEventListener("mouseup", endDragging);
+    imageView.addEventListener("mouseleave", endDragging);
 
-function uploadImage() {
-    //image is entererd in an object format, needs converting using 'imageLink' function
-    let imgLink = URL.createObjectURL(inputFile.files[0]);
-        
-    //following code sets the uploaded and converted image to be the background image. 
-    imageView.style.backgroundImage = `url(${imgLink})`;   
-    
-    //this code remove the text and border when the image upload: 
-    imageView.textContent = ""; 
-    // imageView.style.border = 0;
-} 
+    function startDragging(e) {
+        if (manualMoveEnabled) {
+            isDragging = true;
+            initialX = e.clientX - offsetX;
+            initialY = e.clientY - offsetY;
+        }
+    }
 
-// stops the page refreshing on drag over
-dropArea.addEventListener("dragover", function(e){
-    e.preventDefault();
+    function drag(e) {
+        if (manualMoveEnabled && isDragging) {
+            offsetX = e.clientX - initialX;
+            offsetY = e.clientY - initialY;
+            updateBackgroundScale(scaleFactor);
+        }
+    }
+
+    function endDragging() {
+        isDragging = false;
+    }
+
+    // Prevent default behavior for drag-and-drop events
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false)
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault()
+        e.stopPropagation()
+    }
+
+    // Highlight drop area when a file is dragged over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false)
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false)
+    });
+
+    function highlight(e) {
+        dropArea.classList.add('highlight')
+    }
+
+    function unhighlight(e) {
+        dropArea.classList.remove('highlight')
+    }
+
+    // Handle dropped files
+    dropArea.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        let dt = e.dataTransfer;
+        let files = dt.files;
+
+        if (files.length > 0) {
+            uploadImage(files[0]);
+        }
+    }
+
+    // Toggle button event listener
+    toggleButton.addEventListener("click", function() {
+        manualMoveEnabled = !manualMoveEnabled;
+        toggleButton.textContent = manualMoveEnabled ? "Disable Manual Move" : "Enable Manual Move";
+
+         // Toggle association between label and input file
+         if (manualMoveEnabled) {
+            inputFile.removeAttribute("id");
+        } else {
+            inputFile.setAttribute("id", "inputFile");
+        }
+
+    });
 });
-
-dropArea.addEventListener("drop", function(e){
-    e.preventDefault();
-    //when you drop an image it will transfer that image into the 'inputFile' input field, 'inputFile.files[0]' then gets called in the uploadImage function.
-    inputFile.files = e.dataTransfer.files;
-    //the 'uploadImage' function then converts the file into an image and sets its size and places it as a background image.
-    uploadImage();
-    //'getSize' was being called immediatley after 'uploadImage', no sizes were being shown as the image was not loaded before the 'getSize' was being called. Thanks chatGTP!
-    // new code waits for the image to load before getting its size
-    let img = new Image();
-    img.onload = function() {
-        console.log("Width = " + this.width);
-        console.log("Height = " + this.height);
-    };
-    img.src = URL.createObjectURL(inputFile.files[0]);
-});
-
-
-
-// references: 
-//https://www.youtube.com/watch?v=5Fws9daTtIs
-//https://jsfiddle.net/4N6D9/1/
-//https://stackoverflow.com/questions/8903854/check-image-width-and-height-before-upload-with-javascript
