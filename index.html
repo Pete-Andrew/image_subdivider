@@ -9,23 +9,26 @@
 </head>
 <body>
 
-    <div class="hero">
-        <label for="inputFile" id="dropArea">
+    <div class="hero"  >
+        <label for="inputFile" id="dropArea" >
             <input type="file" accept="image/*" id="inputFile" hidden>
             <div id="imageView">
 
-                <div id="verticalLine"></div> <!-- Add this line for the vertical line -->
-
                 <div id="backgroundImage"></div>
-                <p>Drag and drop or click here <br> to upload image</p>
-                <span>Upload and images from desktop</span>
+                
+                <div id="infoDiv">
+                    <p>Drag and drop or click here <br> to upload image</p>
+                </div>
+
+                <div id="verticalLineDiv"></div> <!-- Add this line for the vertical line -->
+
             </div>
         </label>
     </div>
 
     <div>
         <button id="toggleButton" class="toggle-button">Enable Manual Move</button>
-        <button id="gridToggleButton" class="toggle-button">Hide Grid</button>
+        <button id="gridToggleButton" class="toggle-button">Show Grid</button>
         <button id="reCenterToggleButton" class="toggle-button">Re-center</button>
 
         <label for="scaleSlider">Adjust Image Scale:</label>

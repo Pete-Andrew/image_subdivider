@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Centered Parallel Lines</title>
+<style>
+  #container {
+    position: relative;
+    width: 300px; /* Adjust as needed */
+    height: 300px; /* Adjust as needed */
+    border: 1px solid black;
+  }
+  .line {
+    position: absolute;
+    width: 1px;
+    height: 100%; /* Adjust as needed */
+    background-color: black;
+  }
+</style>
+</head>
+<body>
+
+<div id="container"></div>
+
+<script>
+  // Function to create a vertical line in the container
+  function createVerticalLine(container, offset) {
+    const line = document.createElement('div');
+    line.classList.add('line');
+    line.style.left = offset + 'px';
+    container.appendChild(line);
+  }
+
+  // Function to create parallel lines with regular offset
+  function createParallelLines(container, count, totalWidth) {
+    const lineThickness = 1; // Set line thickness to 1 pixel
+    const totalLinesWidth = count * lineThickness;
+    const spacing = (totalWidth - totalLinesWidth) / (count - 1);
+
+    for (let i = 0; i < count; i++) {
+      createVerticalLine(container, i * (spacing + lineThickness));
+    }
+  }
+
+  // Call the function with the container div and desired parameters
+  const container = document.getElementById('container');
+  createParallelLines(container, 13, container.offsetWidth);
+</script>
+
+</body>
+</html>

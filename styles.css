@@ -31,30 +31,21 @@
     width: 100%;
     height: 100%;
     /* border-radius: 20px; */
-    padding-top: 40vh;
+    /* padding-top: 40vh; */
     border: 2px solid #2d3030;
-    background: rgb(217, 251, 255);
+    background: #F5F5F5;
     overflow: hidden;
+    
+    
 }
 
-#backgroundImage {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
 
-#imageView span {
+/* #imageView span {
     display: block;
     font-size: 12px;
     color: #2d3030;
     margin-top: 15px;
-}
+} */
 
 canvas {
     z-index: 1;
@@ -77,12 +68,61 @@ canvas {
     cursor: pointer;
 }
 
-#verticalLine {
+/* #verticalLine { */
+    
+    
+    /* position: absolute; */
+    /* top: 0; */
+    /* left: 50%; */
+    /* width: 1px;  */
+    /* height: 100%;  */
+    /* background-color: black;  */
+    
+    /* Ensure the line is above the image */
+    /* z-index: 2;  */
+/* } */
+
+#infoDiv {
+    /* padding pushes it down the container */
+    padding-top: 40vh;
     position: absolute;
-    top: 0;
+    width: 100%;
+    height: 10vh;
+    margin: auto;
+    display: block;
+    z-index: 1;
+}
+
+#backgroundImage {
+    position: absolute;
+    top: 50%;
     left: 50%;
-    width: 1px; /* Width of the line */
-    height: 100%; /* Height of the line */
-    background-color: black; /* Color of the line */
-    z-index: 2; /* Ensure the line is above the image */
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 2;
+}
+
+#verticalLineDiv {
+height: 100%; 
+width: 100%;
+z-index: 3;
+background-color: #F5F5F5;
+display: block;
+
+}
+
+.line {
+    position: absolute;
+    width: 1px;
+    height: 100%; /* Set the height to 100% */
+    background-color: black;
+    z-index: 4;
+}
+
+.hiddenClass {
+    display: none;
 }

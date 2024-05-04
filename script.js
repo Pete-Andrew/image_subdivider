@@ -8,6 +8,7 @@ $(document).ready(function () {
     const verticalLine = document.getElementById("verticalLine");
     const imageViewWidth = document.getElementById("imageView").offsetWidth;
     const reCenterToggleButton = document.getElementById("reCenterToggleButton");
+    
 
     let imgWidth = 0;
     let imgHeight = 0;
@@ -168,15 +169,32 @@ $(document).ready(function () {
         }
     });
 
+   
+   
     // making the grid! 
+
+    //Show grid toggle 
     gridToggleButton.addEventListener("click", function () {
         showGrid = !showGrid;
         gridToggleButton.textContent = showGrid ? "Hide Grid" : "Show Grid";
-    });
+        const grid = document.getElementById("verticalLineDiv");  
+        console.log("grid toggle button output");
+        
+        if (grid.style.display == "block") {
+        grid.style.display = "none"; 
+        } else {
+        grid.style.display = "block";
+        };    
+
+          // Call the function with the container div and desired parameters
+  const container = document.getElementById('verticalLineDiv');
+  createParallelLines(container, 13, container.offsetWidth);
+
+   });
 
     // Inside the document.ready function after other DOM manipulations
     // Position the line at the center of the imageView
-    verticalLine.style.left = `${imageViewWidth / 2}px`;
+    // verticalLine.style.left = `${imageViewWidth / 2}px`;
 
     // Update the vertical line position on window resize (optional)
     window.addEventListener("resize", function () {
@@ -229,5 +247,30 @@ $(document).ready(function () {
         reapplyScaleFactor();
     });
 
+
+  // create the grid lines
+  // Function to create a vertical line in the container
+  function createVerticalLine(container, offset) {
+    const line = document.createElement('div');
+    line.classList.add('line');
+    line.style.left = offset + 'px';
+    container.appendChild(line);
+  }
+
+  // Function to create parallel lines with regular offset
+  function createParallelLines(container, count, totalWidth) {
+    const lineThickness = 1; // Set line thickness to 1 pixel
+    const totalLinesWidth = count * lineThickness;
+    const spacing = (totalWidth - totalLinesWidth) / (count - 1);
+
+    for (let i = 0; i < count; i++) {
+      createVerticalLine(container, i * (spacing + lineThickness));
+    }
+  }
+
+
+
+    // make a central line and then create parallel lines that are offset from this by regular amounts e.g. 10px
+    
 
 });
