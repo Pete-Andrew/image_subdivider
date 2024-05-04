@@ -111,7 +111,7 @@ height: 100%;
 width: 100%;
 z-index: 3;
 background-color: #F5F5F5;
-display: block;
+
 
 }
 
@@ -121,8 +121,4 @@ display: block;
     height: 100%; /* Set the height to 100% */
     background-color: black;
     z-index: 4;
-}
-
-.hiddenClass {
-    display: none;
 }

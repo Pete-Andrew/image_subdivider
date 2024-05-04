@@ -8,7 +8,7 @@ $(document).ready(function () {
     const verticalLine = document.getElementById("verticalLine");
     const imageViewWidth = document.getElementById("imageView").offsetWidth;
     const reCenterToggleButton = document.getElementById("reCenterToggleButton");
-    
+    const container = document.getElementById('verticalLineDiv');
 
     let imgWidth = 0;
     let imgHeight = 0;
@@ -186,10 +186,10 @@ $(document).ready(function () {
         grid.style.display = "block";
         };    
 
-          // Call the function with the container div and desired parameters
-  const container = document.getElementById('verticalLineDiv');
-  createParallelLines(container, 13, container.offsetWidth);
-
+    // Call the createParallel lines function within the container div and desired parameters
+    // const container = document.getElementById('verticalLineDiv');
+    // createParallelLines(container, 13, container.offsetWidth);
+   
    });
 
     // Inside the document.ready function after other DOM manipulations
@@ -268,9 +268,9 @@ $(document).ready(function () {
     }
   }
 
-
-
-    // make a central line and then create parallel lines that are offset from this by regular amounts e.g. 10px
-    
-
+  createParallelLines(container, 13, container.offsetWidth);
+  //as soon as this div is created it is hidden
+  verticalLineDiv.style.display = "none";
+  console.log("verticalLineDiv has been hidden");
 });
+
