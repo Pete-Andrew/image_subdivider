@@ -9,6 +9,7 @@ $(document).ready(function () {
     const imageViewWidth = document.getElementById("imageView").offsetWidth;
     const reCenterToggleButton = document.getElementById("reCenterToggleButton");
     const container = document.getElementById('verticalLineDiv');
+    container.style.display = "none";
 
     let imgWidth = 0;
     let imgHeight = 0;
@@ -24,26 +25,17 @@ $(document).ready(function () {
 
     // Get the size of the input image
     function getSize() {
-        //uses jquery to get the inputFile ID and calls the following function on change event, $("#inputFile") is a jquery selector that selects a HTML element 
         $("#inputFile").change(function (e) {
             var file, img;
 
             if ((file = this.files[0])) {
                 img = new Image();
 
-                //logs the size of the imported image into the console. 
                 img.onload = function () {
-
                     imgWidth = this.width;
-                    console.log("original Width = " + imgWidth);
                     imgHeight = this.height;
-                    console.log("original Height = " + imgHeight);
-                    // gets the absolute value of the 'backgroundImage' div that is created when an image is imported.    
-                    console.log(document.getElementById('backgroundImage').offsetWidth);
-
                 };
 
-                //throws an error if the file is not an image
                 img.onerror = function () {
                     alert("not a valid file: " + file.type);
                 };
@@ -68,27 +60,18 @@ $(document).ready(function () {
         }
     });
 
-
     // Function to update background image scale
     function updateBackgroundScale(scale) {
         scaleFactor = scale;
         let translateX = offsetX - (backgroundImage.offsetWidth / 2);
         let translateY = offsetY - (backgroundImage.offsetHeight / 2);
         backgroundImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-
-        // adding an if statement stops the console log creating thousands of entries as the picture is moved. 
-        if (manualMoveEnabled == false) {
-            console.log("scale Factor = " + scaleFactor);
-            console.log("imgWidth*scaleFactor = " + imgWidth * scaleFactor);
-        }
     }
-
 
     // Event listener for scale slider change
     $("#scaleSlider").on("input", function () {
         let scale = $(this).val();
         updateBackgroundScale(scale);
-
     });
 
     // Event listeners for mouse events to enable dragging
@@ -169,39 +152,57 @@ $(document).ready(function () {
         }
     });
 
-   
-   
     // making the grid! 
 
     //Show grid toggle 
     gridToggleButton.addEventListener("click", function () {
         showGrid = !showGrid;
         gridToggleButton.textContent = showGrid ? "Hide Grid" : "Show Grid";
-        const grid = document.getElementById("verticalLineDiv");  
-        console.log("grid toggle button output");
-        
+        const grid = document.getElementById("verticalLineDiv");
+
         if (grid.style.display == "block") {
-        grid.style.display = "none"; 
+            grid.style.display = "none";
         } else {
-        grid.style.display = "block";
-        };    
-
-    // Call the createParallel lines function within the container div and desired parameters
-    // const container = document.getElementById('verticalLineDiv');
-    // createParallelLines(container, 13, container.offsetWidth);
-   
-   });
-
-    // Inside the document.ready function after other DOM manipulations
-    // Position the line at the center of the imageView
-    // verticalLine.style.left = `${imageViewWidth / 2}px`;
-
-    // Update the vertical line position on window resize (optional)
-    window.addEventListener("resize", function () {
-        const newImageViewWidth = document.getElementById("imageView").offsetWidth;
-        verticalLine.style.left = `${newImageViewWidth / 2}px`;
+            grid.style.display = "block";
+        };
 
     });
+
+
+    // Function to update the vertical grid lines based on container width
+    function updateGrid(container) {
+        container.innerHTML = ''; // Clear existing lines
+        createParallelLines(container, 13); // Recreate lines
+    }
+
+    // Call the updateGrid function initially
+    updateGrid(container);
+
+    // Listen for window resize event to update the grid lines
+    window.addEventListener('resize', function () {
+        updateGrid(container);
+
+        // Additionally, update the position of the vertical line if needed
+        // verticalLine.style.left = `${imageViewWidth / 2}px`;
+    });
+
+    // Function to create a vertical line in the container
+    function createVerticalLine(container, offsetPercentage) {
+        const line = document.createElement('div');
+        line.classList.add('line');
+        line.style.left = offsetPercentage + '%'; // Use percentage-based offset
+        container.appendChild(line);
+    }
+
+    // Function to create vertical parallel lines with regular offset
+    function createParallelLines(container, count) {
+        const spacingPercentage = 100 / (count - 1); // Calculate percentage-based spacing
+
+        for (let i = 0; i < count; i++) {
+            createVerticalLine(container, i * spacingPercentage);
+        }
+    }
+
 
     // recenter the image 
     // Initialize it with the default scale factor
@@ -247,30 +248,10 @@ $(document).ready(function () {
         reapplyScaleFactor();
     });
 
+    
 
-  // create the grid lines
-  // Function to create a vertical line in the container
-  function createVerticalLine(container, offset) {
-    const line = document.createElement('div');
-    line.classList.add('line');
-    line.style.left = offset + 'px';
-    container.appendChild(line);
-  }
 
-  // Function to create parallel lines with regular offset
-  function createParallelLines(container, count, totalWidth) {
-    const lineThickness = 1; // Set line thickness to 1 pixel
-    const totalLinesWidth = count * lineThickness;
-    const spacing = (totalWidth - totalLinesWidth) / (count - 1);
 
-    for (let i = 0; i < count; i++) {
-      createVerticalLine(container, i * (spacing + lineThickness));
-    }
-  }
 
-  createParallelLines(container, 13, container.offsetWidth);
-  //as soon as this div is created it is hidden
-  verticalLineDiv.style.display = "none";
-  console.log("verticalLineDiv has been hidden");
+
 });
-

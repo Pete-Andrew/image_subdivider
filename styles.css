@@ -122,3 +122,11 @@ background-color: #F5F5F5;
     background-color: black;
     z-index: 4;
 }
+
+.horizontalLine {
+    position: absolute;
+    width: 1px;
+    width: 100%; /* Set the height to 100% */
+    background-color: black;
+    z-index: 4;
+}
