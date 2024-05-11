@@ -5,14 +5,15 @@ $(document).ready(function () {
     const backgroundImage = document.getElementById("backgroundImage");
     const toggleButton = document.getElementById("toggleButton");
     const gridToggleButton = document.getElementById("gridToggleButton");
-    const verticalLine = document.getElementById("verticalLine");
-    const imageViewWidth = document.getElementById("imageView").offsetWidth;
+    // const verticalLine = document.getElementById("verticalLine");
+    // const imageViewWidth = document.getElementById("imageView").offsetWidth;
     const reCenterToggleButton = document.getElementById("reCenterToggleButton");
     const container = document.getElementById('verticalLineDiv');
     container.style.display = "none";
 
     let imgWidth = 0;
     let imgHeight = 0;
+    let vertLineNum = 7;
     let scaleFactor = 1;
     let isDragging = false;
     let initialX;
@@ -20,7 +21,7 @@ $(document).ready(function () {
     let offsetX = 0;
     let offsetY = 0;
     let manualMoveEnabled = false;
-    let clickHereToUpload = true;
+    // let clickHereToUpload = true;
     let showGrid = true;
 
     // Get the size of the input image
@@ -71,7 +72,17 @@ $(document).ready(function () {
     // Event listener for scale slider change
     $("#scaleSlider").on("input", function () {
         let scale = $(this).val();
+        console.log("current scale = " + scale);
         updateBackgroundScale(scale);
+    });
+
+    // Event listener for number of grid lines slider change
+    $("#gridLineScaleSlider").on("input", function () {
+        vertLineNum = $(this).val();
+        console.log("vertLineNum = " + vertLineNum);
+        container.innerHTML = ''; // Clear existing lines
+        createParallelLines(container, vertLineNum); // Recreate lines
+        
     });
 
     // Event listeners for mouse events to enable dragging
@@ -168,11 +179,10 @@ $(document).ready(function () {
 
     });
 
-
     // Function to update the vertical grid lines based on container width
     function updateGrid(container) {
         container.innerHTML = ''; // Clear existing lines
-        createParallelLines(container, 13); // Recreate lines
+        createParallelLines(container, vertLineNum); // Recreate lines
     }
 
     // Call the updateGrid function initially
@@ -248,7 +258,8 @@ $(document).ready(function () {
         reapplyScaleFactor();
     });
 
-    
+    // grid lines density slider 
+
 
 
 
