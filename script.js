@@ -5,11 +5,15 @@ $(document).ready(function () {
     const backgroundImage = document.getElementById("backgroundImage");
     const toggleButton = document.getElementById("toggleButton");
     const gridToggleButton = document.getElementById("gridToggleButton");
+    const horizontalGridToggleButton = document.getElementById("horizontalGridToggleButton");
     // const verticalLine = document.getElementById("verticalLine");
     // const imageViewWidth = document.getElementById("imageView").offsetWidth;
     const reCenterToggleButton = document.getElementById("reCenterToggleButton");
+    
     const container = document.getElementById('verticalLineDiv');
+
     container.style.display = "none";
+    
 
     let imgWidth = 0;
     let imgHeight = 0;
@@ -82,8 +86,8 @@ $(document).ready(function () {
         console.log("vertLineNum = " + vertLineNum);
         container.innerHTML = ''; // Clear existing lines
         createParallelLines(container, vertLineNum); // Recreate lines
-        
     });
+
 
     // Event listeners for mouse events to enable dragging
     imageView.addEventListener("mousedown", startDragging);
@@ -150,7 +154,7 @@ $(document).ready(function () {
         }
     }
 
-    // Toggle button event listener
+    // Move image Toggle button event listener
     toggleButton.addEventListener("click", function () {
         manualMoveEnabled = !manualMoveEnabled;
         toggleButton.textContent = manualMoveEnabled ? "Disable Manual Move" : "Enable Manual Move";
@@ -163,9 +167,8 @@ $(document).ready(function () {
         }
     });
 
-    // making the grid! 
-
-    //Show grid toggle 
+    //Making the grid! 
+    //Show vertical grid toggle 
     gridToggleButton.addEventListener("click", function () {
         showGrid = !showGrid;
         gridToggleButton.textContent = showGrid ? "Hide Grid" : "Show Grid";
@@ -176,7 +179,6 @@ $(document).ready(function () {
         } else {
             grid.style.display = "block";
         };
-
     });
 
     // Function to update the vertical grid lines based on container width
@@ -200,6 +202,7 @@ $(document).ready(function () {
     function createVerticalLine(container, offsetPercentage) {
         const line = document.createElement('div');
         line.classList.add('line');
+        // line.classList.add('horizontalLine');
         line.style.left = offsetPercentage + '%'; // Use percentage-based offset
         container.appendChild(line);
     }
@@ -207,12 +210,28 @@ $(document).ready(function () {
     // Function to create vertical parallel lines with regular offset
     function createParallelLines(container, count) {
         const spacingPercentage = 100 / (count - 1); // Calculate percentage-based spacing
-
         for (let i = 0; i < count; i++) {
             createVerticalLine(container, i * spacingPercentage);
         }
     }
 
+    // Function to create a HORIZONTAL lines in the container
+    function createHorizontalLine(container, offsetPercentage) {
+        const hzLine = document.createElement('div');
+        hzLine.classList.add('horizontalLine');
+        hzLine.style.top = offsetPercentage + '%'; // Use percentage-based offset
+        container.appendChild(hzLine);
+    }
+
+    // Function to create HORIZONTAL parallel lines with regular offset
+    function createHzParallelLines(container, count) {
+        const spacingPercentage = 100 / (count - 1); // Calculate percentage-based spacing
+        for (let i = 0; i < count; i++) {
+            createHorizontalLine(container, i * spacingPercentage);
+        }
+    }
+
+    createHzParallelLines(container, 7);
 
     // recenter the image 
     // Initialize it with the default scale factor
@@ -258,7 +277,15 @@ $(document).ready(function () {
         reapplyScaleFactor();
     });
 
-    // grid lines density slider 
+    // horizontal grid lines
+
+    // need to create a horizontal grid line in the middle of the div
+    // need to have the same distance apart as the vertical grid lines so that the grid lines always form a cube lattice
+
+
+
+
+    //grid line thickness
 
 
 

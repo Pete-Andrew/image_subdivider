@@ -111,8 +111,13 @@ height: 100%;
 width: 100%;
 z-index: 3;
 background-color: #F5F5F5;
+}
 
-
+#horizontalLineDiv {
+    height: 100%; 
+    width: 100%;
+    z-index: 3;
+    background-color: #F5F5F5;
 }
 
 .line {
@@ -125,7 +130,7 @@ background-color: #F5F5F5;
 
 .horizontalLine {
     position: absolute;
-    width: 1px;
+    height: 1px;
     width: 100%; /* Set the height to 100% */
     background-color: black;
     z-index: 4;
