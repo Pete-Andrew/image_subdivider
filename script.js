@@ -52,6 +52,14 @@ $(document).ready(function () {
 
     getSize();
 
+    // this function gets the full width of the main container (called imageView), will be used to get the spacing between vertical lines to define horizontal spacing
+    function getImageViewWidth(imageView){
+        const imageViewWidth = imageView.offsetWidth;
+        console.log("Image View width = " + imageViewWidth);
+        // return imageViewWidth;
+    }       
+    getImageViewWidth(imageView);
+
     // Function to handle image upload
     function uploadImage(file) {
         let imgLink = URL.createObjectURL(file);
@@ -202,8 +210,8 @@ $(document).ready(function () {
     function createVerticalLine(container, offsetPercentage) {
         const line = document.createElement('div');
         line.classList.add('line');
-        // line.classList.add('horizontalLine');
         line.style.left = offsetPercentage + '%'; // Use percentage-based offset
+        
         container.appendChild(line);
     }
 
@@ -215,6 +223,7 @@ $(document).ready(function () {
         }
     }
 
+  
     // Function to create a HORIZONTAL lines in the container
     function createHorizontalLine(container, offsetPercentage) {
         const hzLine = document.createElement('div');
