@@ -14,10 +14,11 @@ $(document).ready(function () {
 
     container.style.display = "none";
     
-
+    let totalImageViewWidth = 0;
+    let widthMinusLines = 0;
     let imgWidth = 0;
     let imgHeight = 0;
-    let vertLineNum = 7;
+    let vertLineNum = 9;
     let scaleFactor = 1;
     let isDragging = false;
     let initialX;
@@ -54,9 +55,9 @@ $(document).ready(function () {
 
     // this function gets the full width of the main container (called imageView), will be used to get the spacing between vertical lines to define horizontal spacing
     function getImageViewWidth(imageView){
-        const imageViewWidth = imageView.offsetWidth;
-        console.log("Image View width = " + imageViewWidth);
-        // return imageViewWidth;
+        totalImageViewWidth = Number(imageView.offsetWidth);
+        console.log("Image View width = " + totalImageViewWidth);    
+        return totalImageViewWidth;
     }       
     getImageViewWidth(imageView);
 
@@ -93,7 +94,17 @@ $(document).ready(function () {
         vertLineNum = $(this).val();
         console.log("vertLineNum = " + vertLineNum);
         container.innerHTML = ''; // Clear existing lines
+        
         createParallelLines(container, vertLineNum); // Recreate lines
+        createHzParallelLines(container, vertLineNum);
+        
+        let vertLineWidthSum = vertLineNum * 1;
+        console.log("vertLineWidthSum = " + vertLineWidthSum + " px");
+                
+        widthMinusLines = totalImageViewWidth - vertLineWidthSum;
+        console.log("container width - vertical lines with = " + widthMinusLines);
+        // widthMinusLines / number of lines gives the spacing in px between the vertical lines and ∴ the spacing needed between the vertical ones. 
+
     });
 
 
@@ -193,6 +204,7 @@ $(document).ready(function () {
     function updateGrid(container) {
         container.innerHTML = ''; // Clear existing lines
         createParallelLines(container, vertLineNum); // Recreate lines
+        createHzParallelLines(container, vertLineNum);
     }
 
     // Call the updateGrid function initially
@@ -240,7 +252,7 @@ $(document).ready(function () {
         }
     }
 
-    createHzParallelLines(container, 7);
+    // createHzParallelLines(container, vertLineNum);
 
     // recenter the image 
     // Initialize it with the default scale factor
