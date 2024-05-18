@@ -6,11 +6,12 @@ $(document).ready(function () {
     const toggleButton = document.getElementById("toggleButton");
     const gridToggleButton = document.getElementById("gridToggleButton");
     const horizontalGridToggleButton = document.getElementById("horizontalGridToggleButton");
-    // const verticalLine = document.getElementById("verticalLine");
-    // const imageViewWidth = document.getElementById("imageView").offsetWidth;
     const reCenterToggleButton = document.getElementById("reCenterToggleButton");
     
     const container = document.getElementById('verticalLineDiv');
+
+    let lineCount = 20; // Default number of horizontal lines
+    let spacingPixels = 0; // Adjust this value as needed
 
     container.style.display = "none";
     
@@ -26,10 +27,8 @@ $(document).ready(function () {
     let offsetX = 0;
     let offsetY = 0;
     let manualMoveEnabled = false;
-    // let clickHereToUpload = true;
     let showGrid = true;
 
-    // Get the size of the input image
     function getSize() {
         $("#inputFile").change(function (e) {
             var file, img;
@@ -53,7 +52,6 @@ $(document).ready(function () {
 
     getSize();
 
-    // this function gets the full width of the main container (called imageView), will be used to get the spacing between vertical lines to define horizontal spacing
     function getImageViewWidth(imageView){
         totalImageViewWidth = Number(imageView.offsetWidth);
         console.log("Image View width = " + totalImageViewWidth);    
@@ -61,20 +59,17 @@ $(document).ready(function () {
     }       
     getImageViewWidth(imageView);
 
-    // Function to handle image upload
     function uploadImage(file) {
         let imgLink = URL.createObjectURL(file);
         backgroundImage.style.backgroundImage = `url(${imgLink})`;
     }
 
-    // Event listener for file input change
     inputFile.addEventListener("change", function () {
         if (this.files.length > 0) {
             uploadImage(this.files[0]);
         }
     });
 
-    // Function to update background image scale
     function updateBackgroundScale(scale) {
         scaleFactor = scale;
         let translateX = offsetX - (backgroundImage.offsetWidth / 2);
@@ -82,33 +77,30 @@ $(document).ready(function () {
         backgroundImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
     }
 
-    // Event listener for scale slider change
     $("#scaleSlider").on("input", function () {
         let scale = $(this).val();
         console.log("current scale = " + scale);
         updateBackgroundScale(scale);
     });
 
-    // Event listener for number of grid lines slider change
     $("#gridLineScaleSlider").on("input", function () {
         vertLineNum = $(this).val();
         console.log("vertLineNum = " + vertLineNum);
-        container.innerHTML = ''; // Clear existing lines
+        console.log("Container width = " + container.offsetWidth + " px");
+        container.innerHTML = ''; // Clear existing lines     
         
-        createParallelLines(container, vertLineNum); // Recreate lines
-        createHzParallelLines(container, vertLineNum);
-        
-        let vertLineWidthSum = vertLineNum * 1;
+        let vertLineWidthSum = vertLineNum * 1; //you can change this if you want fatter grid lines
         console.log("vertLineWidthSum = " + vertLineWidthSum + " px");
                 
         widthMinusLines = totalImageViewWidth - vertLineWidthSum;
         console.log("container width - vertical lines with = " + widthMinusLines);
-        // widthMinusLines / number of lines gives the spacing in px between the vertical lines and ∴ the spacing needed between the vertical ones. 
+        spacingPixels = widthMinusLines / vertLineNum 
+        console.log("line spacing in PX = " + spacingPixels);
 
+        createParallelLines(container, vertLineNum); // Recreate lines
+        createHzParallelLines(container, lineCount, spacingPixels);
     });
 
-
-    // Event listeners for mouse events to enable dragging
     imageView.addEventListener("mousedown", startDragging);
     imageView.addEventListener("mousemove", drag);
     imageView.addEventListener("mouseup", endDragging);
@@ -134,7 +126,6 @@ $(document).ready(function () {
         isDragging = false;
     }
 
-    // Prevent default behavior for drag-and-drop events
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
         dropArea.addEventListener(eventName, preventDefaults, false)
     });
@@ -144,7 +135,6 @@ $(document).ready(function () {
         e.stopPropagation()
     }
 
-    // Highlight drop area when a file is dragged over it
     ['dragenter', 'dragover'].forEach(eventName => {
         dropArea.addEventListener(eventName, highlight, false)
     });
@@ -161,7 +151,6 @@ $(document).ready(function () {
         dropArea.classList.remove('highlight')
     }
 
-    // Handle dropped files
     dropArea.addEventListener('drop', handleDrop, false);
 
     function handleDrop(e) {
@@ -173,12 +162,10 @@ $(document).ready(function () {
         }
     }
 
-    // Move image Toggle button event listener
     toggleButton.addEventListener("click", function () {
         manualMoveEnabled = !manualMoveEnabled;
         toggleButton.textContent = manualMoveEnabled ? "Disable Manual Move" : "Enable Manual Move";
 
-        // Toggle association between label and input file
         if (manualMoveEnabled) {
             inputFile.removeAttribute("id");
         } else {
@@ -186,8 +173,6 @@ $(document).ready(function () {
         }
     });
 
-    //Making the grid! 
-    //Show vertical grid toggle 
     gridToggleButton.addEventListener("click", function () {
         showGrid = !showGrid;
         gridToggleButton.textContent = showGrid ? "Hide Grid" : "Show Grid";
@@ -200,25 +185,19 @@ $(document).ready(function () {
         };
     });
 
-    // Function to update the vertical grid lines based on container width
     function updateGrid(container) {
         container.innerHTML = ''; // Clear existing lines
+        
         createParallelLines(container, vertLineNum); // Recreate lines
-        createHzParallelLines(container, vertLineNum);
+        createHzParallelLines(container, lineCount, spacingPixels);
     }
 
-    // Call the updateGrid function initially
     updateGrid(container);
 
-    // Listen for window resize event to update the grid lines
     window.addEventListener('resize', function () {
         updateGrid(container);
-
-        // Additionally, update the position of the vertical line if needed
-        // verticalLine.style.left = `${imageViewWidth / 2}px`;
     });
 
-    // Function to create a vertical line in the container
     function createVerticalLine(container, offsetPercentage) {
         const line = document.createElement('div');
         line.classList.add('line');
@@ -227,7 +206,6 @@ $(document).ready(function () {
         container.appendChild(line);
     }
 
-    // Function to create vertical parallel lines with regular offset
     function createParallelLines(container, count) {
         const spacingPercentage = 100 / (count - 1); // Calculate percentage-based spacing
         for (let i = 0; i < count; i++) {
@@ -235,82 +213,63 @@ $(document).ready(function () {
         }
     }
 
-  
-    // Function to create a HORIZONTAL lines in the container
-    function createHorizontalLine(container, offsetPercentage) {
+    function createHorizontalLine(container, offsetPixels) {
         const hzLine = document.createElement('div');
         hzLine.classList.add('horizontalLine');
-        hzLine.style.top = offsetPercentage + '%'; // Use percentage-based offset
+        hzLine.style.position = 'absolute'; // Ensure position is absolute
+        hzLine.style.top = offsetPixels + 'px'; // Use pixel-based offset
         container.appendChild(hzLine);
     }
 
-    // Function to create HORIZONTAL parallel lines with regular offset
-    function createHzParallelLines(container, count) {
-        const spacingPercentage = 100 / (count - 1); // Calculate percentage-based spacing
-        for (let i = 0; i < count; i++) {
-            createHorizontalLine(container, i * spacingPercentage);
+    function createHzParallelLines(container, count, spacingPixels) {
+        const containerHeight = imageView.clientHeight; // Get the container height
+        const centerOffset = containerHeight / 2; // Calculate the center position
+
+        // Calculate the initial offset for the first line to be at the center
+        const initialOffset = centerOffset;
+
+        // Create the central line
+        createHorizontalLine(container, initialOffset);
+
+        // Create lines above the central line
+        for (let i = 1; i < Math.ceil(count / 2); i++) {
+            createHorizontalLine(container, initialOffset - i * spacingPixels);
+        }
+
+        // Create lines below the central line
+        for (let i = 1; i < Math.floor(count / 2); i++) {
+            createHorizontalLine(container, initialOffset + i * spacingPixels);
         }
     }
 
-    // createHzParallelLines(container, vertLineNum);
-
-    // recenter the image 
-    // Initialize it with the default scale factor
     let currentScaleFactor = 1;
 
-    // Function to clear manipulations
     function clearManipulations() {
-        // Reset any styles applied to the image
         backgroundImage.style.backgroundPosition = "";
         backgroundImage.style.transform = "";
 
-        // Reset any variables used for manipulation
         offsetX = 0;
         offsetY = 0;
 
-        // Log a message to confirm that manipulations have been cleared
         console.log("JavaScript manipulations cleared.");
     }
 
-    // Event listener for reCenterToggleButton
     reCenterToggleButton.addEventListener("click", function () {
-        // Store the current scale factor
         currentScaleFactor = scaleFactor;
 
-        // Clear JavaScript manipulations
         clearManipulations();
 
-        // Re-center the image
         backgroundImage.style.backgroundPosition = "center center";
         console.log("Image re-centered.");
     });
 
-    // Function to reapply scale factor after re-centering
     function reapplyScaleFactor() {
-        // Reapply the stored scale factor
         let translateX = offsetX - (backgroundImage.offsetWidth / 2);
         let translateY = offsetY - (backgroundImage.offsetHeight / 2);
         backgroundImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentScaleFactor})`;
     }
 
-    // Update the scale after re-centering
     reCenterToggleButton.addEventListener("click", function () {
         reapplyScaleFactor();
     });
-
-    // horizontal grid lines
-
-    // need to create a horizontal grid line in the middle of the div
-    // need to have the same distance apart as the vertical grid lines so that the grid lines always form a cube lattice
-
-
-
-
-    //grid line thickness
-
-
-
-
-
-
 });

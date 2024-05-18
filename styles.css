@@ -115,6 +115,7 @@ background-color: #F5F5F5;
     width: 1px;
     height: 100%; /* Set the height to 100% */
     background-color: black;
+    /* background-color: white; */
     z-index: 4;
 }
 
@@ -123,5 +124,6 @@ background-color: #F5F5F5;
     height: 1px;
     width: 100%; /* Set the height to 100% */
     background-color: black;
+    /* background-color: white; */
     z-index: 4;
 }
