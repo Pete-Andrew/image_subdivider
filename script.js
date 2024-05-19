@@ -52,6 +52,7 @@ $(document).ready(function () {
 
     getSize();
 
+    //gets the width of the 'imageView' div, which holds the imageyy
     function getImageViewWidth(imageView){
         totalImageViewWidth = Number(imageView.offsetWidth);
         console.log("Image View width = " + totalImageViewWidth);    
@@ -70,6 +71,7 @@ $(document).ready(function () {
         }
     });
 
+    // changes the size of the image
     function updateBackgroundScale(scale) {
         scaleFactor = scale;
         let translateX = offsetX - (backgroundImage.offsetWidth / 2);
@@ -77,14 +79,17 @@ $(document).ready(function () {
         backgroundImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
     }
 
+    // listens for the scale slider 
     $("#scaleSlider").on("input", function () {
         let scale = $(this).val();
         console.log("current scale = " + scale);
         updateBackgroundScale(scale);
     });
 
+    // updates the grid lines when the slider is changed
     $("#gridLineScaleSlider").on("input", function () {
         vertLineNum = $(this).val();
+        lineCount = vertLineNum*2; // *2 makes sure there are always enough horizontal grid lines (unless the image is ridiculously distorted)
         console.log("vertLineNum = " + vertLineNum);
         console.log("Container width = " + container.offsetWidth + " px");
         container.innerHTML = ''; // Clear existing lines     
@@ -185,13 +190,18 @@ $(document).ready(function () {
         };
     });
 
+    // this function redraws the lines when the grid is re-sized
     function updateGrid(container) {
         container.innerHTML = ''; // Clear existing lines
-        
+    
         createParallelLines(container, vertLineNum); // Recreate lines
+        
+        // re-measure the spacing between vertical lines before calling the createHzParallelLines function. 
+        // pass the new values into this function. But where is best to do this? 
+        // best to create a separate measure gap function based on the number of gridLines func and then update a global variable?  
+        
         createHzParallelLines(container, lineCount, spacingPixels);
     }
-
     updateGrid(container);
 
     window.addEventListener('resize', function () {
@@ -202,7 +212,7 @@ $(document).ready(function () {
         const line = document.createElement('div');
         line.classList.add('line');
         line.style.left = offsetPercentage + '%'; // Use percentage-based offset
-        
+              
         container.appendChild(line);
     }
 
