@@ -190,14 +190,15 @@ $(document).ready(function () {
         container.innerHTML = ''; // Clear existing lines
     
         createParallelLines(container, vertLineNum); // Recreate lines
-        
-        // re-measure the spacing between vertical lines before calling the createHzParallelLines function. 
-        // pass the new values into this function. But where is best to do this? 
-        // best to create a separate measure gap function based on the number of gridLines func and then update a global variable?  
-        
-        createHzParallelLines(container, lineCount, spacingPixels);
+        measureLineSpace(container, vertLineNum)
     }
     updateGrid(container);
+
+    function measureLineSpace(container, vertLineNum){
+        getImageViewWidth(imageView); // updates the totalImageView width global variable. 
+        spacingPixels = totalImageViewWidth / (vertLineNum-1) // have to -1 to get the correct scale e.g. make all the division cubes
+        createHzParallelLines(container, lineCount, spacingPixels); //calls this function with updated spacing pixels
+    }
 
     window.addEventListener('resize', function () {
         updateGrid(container);
