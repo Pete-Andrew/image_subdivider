@@ -89,17 +89,12 @@ $(document).ready(function () {
     // updates the grid lines when the slider is changed
     $("#gridLineScaleSlider").on("input", function () {
         vertLineNum = $(this).val();
-        lineCount = vertLineNum*2; // *2 makes sure there are always enough horizontal grid lines (unless the image is ridiculously distorted)
+        lineCount = vertLineNum*3; // *3 makes sure there are always enough horizontal grid lines (unless the image is ridiculously distorted)
         console.log("vertLineNum = " + vertLineNum);
         console.log("Container width = " + container.offsetWidth + " px");
-        container.innerHTML = ''; // Clear existing lines     
-        
-        let vertLineWidthSum = vertLineNum * 1; //you can change this if you want fatter grid lines
-        console.log("vertLineWidthSum = " + vertLineWidthSum + " px");
-                
-        widthMinusLines = totalImageViewWidth - vertLineWidthSum;
-        console.log("container width - vertical lines with = " + widthMinusLines);
-        spacingPixels = widthMinusLines / vertLineNum 
+        container.innerHTML = ''; // Clear existing lines    
+                    
+        spacingPixels = totalImageViewWidth / (vertLineNum-1) // have to -1 to get the correct scale e.g. make all the division cubes
         console.log("line spacing in PX = " + spacingPixels);
 
         createParallelLines(container, vertLineNum); // Recreate lines
