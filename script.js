@@ -10,7 +10,7 @@ $(document).ready(function () {
     
     const container = document.getElementById('verticalLineDiv');
 
-    let lineCount = 20; // Default number of horizontal lines
+    let lineCount = 0; // Default number of horizontal lines
     let spacingPixels = 0; // Adjust this value as needed
 
     container.style.display = "none";
@@ -19,7 +19,7 @@ $(document).ready(function () {
     let widthMinusLines = 0;
     let imgWidth = 0;
     let imgHeight = 0;
-    let vertLineNum = 9;
+    let vertLineNum = 3;
     let scaleFactor = 1;
     let isDragging = false;
     let initialX;
@@ -27,7 +27,8 @@ $(document).ready(function () {
     let offsetX = 0;
     let offsetY = 0;
     let manualMoveEnabled = false;
-    let showGrid = true;
+    let showGrid = false;
+    let showHzLines = false;
 
     function getSize() {
         $("#inputFile").change(function (e) {
@@ -207,8 +208,7 @@ $(document).ready(function () {
     function createVerticalLine(container, offsetPercentage) {
         const line = document.createElement('div');
         line.classList.add('line');
-        line.style.left = offsetPercentage + '%'; // Use percentage-based offset
-              
+        line.style.left = offsetPercentage + '%'; // Use percentage-based offset              
         container.appendChild(line);
     }
 
@@ -216,8 +216,9 @@ $(document).ready(function () {
         const spacingPercentage = 100 / (count - 1); // Calculate percentage-based spacing
         for (let i = 0; i < count; i++) {
             createVerticalLine(container, i * spacingPercentage);
+            console.log("createParallelLines func called");
         }
-    }
+    };
 
     function createHorizontalLine(container, offsetPixels) {
         const hzLine = document.createElement('div');
@@ -247,6 +248,25 @@ $(document).ready(function () {
             createHorizontalLine(container, initialOffset + i * spacingPixels);
         }
     }
+
+    //clear all lines and redraw only vertical lines. 
+    horizontalGridToggleButton.addEventListener("click", function () {
+
+        showHzLines = !showHzLines;
+        horizontalGridToggleButton.textContent = !showHzLines ? "Hide Hz Grid" : "Show Hz Grid";
+        // const grid = document.getElementById("verticalLineDiv");
+        if (showHzLines) {
+            container.innerHTML = ''; // Clear existing lines
+            console.log("Hide Horizontal Grid Lines button clicked");
+            createParallelLines(container,vertLineNum);
+        } else {
+            console.log("some nonsense");
+            createHzParallelLines(container,vertLineNum*3,spacingPixels);
+        };
+    });
+
+
+
 
     let currentScaleFactor = 1;
 
