@@ -6,6 +6,7 @@ $(document).ready(function () {
     const toggleButton = document.getElementById("toggleButton");
     const gridToggleButton = document.getElementById("gridToggleButton");
     const horizontalGridToggleButton = document.getElementById("horizontalGridToggleButton");
+    const verticalGridToggleButton = document.getElementById("verticalGridToggleButton");
     const reCenterToggleButton = document.getElementById("reCenterToggleButton");
     
     const container = document.getElementById('verticalLineDiv');
@@ -29,6 +30,7 @@ $(document).ready(function () {
     let manualMoveEnabled = false;
     let showGrid = false;
     let showHzLines = false;
+    let showVertLines = false;
 
     function getSize() {
         $("#inputFile").change(function (e) {
@@ -99,7 +101,7 @@ $(document).ready(function () {
         console.log("line spacing in PX = " + spacingPixels);
 
         createParallelLines(container, vertLineNum); // Recreate lines
-        createHzParallelLines(container, lineCount, spacingPixels);
+        if(!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); };
     });
 
     imageView.addEventListener("mousedown", startDragging);
@@ -198,7 +200,7 @@ $(document).ready(function () {
     function measureLineSpace(container, vertLineNum){
         getImageViewWidth(imageView); // updates the totalImageView width global variable. 
         spacingPixels = totalImageViewWidth / (vertLineNum-1) // have to -1 to get the correct scale e.g. make all the division cubes
-        createHzParallelLines(container, lineCount, spacingPixels); //calls this function with updated spacing pixels
+        if (!showHzLines) {createHzParallelLines(container, lineCount, spacingPixels);} //calls this function with updated spacing pixels IF showHzLines bool is true. 
     }
 
     window.addEventListener('resize', function () {
@@ -253,19 +255,31 @@ $(document).ready(function () {
     horizontalGridToggleButton.addEventListener("click", function () {
 
         showHzLines = !showHzLines;
+        console.log("showHzLine = " + !showHzLines);
         horizontalGridToggleButton.textContent = !showHzLines ? "Hide Hz Grid" : "Show Hz Grid";
         // const grid = document.getElementById("verticalLineDiv");
         if (showHzLines) {
             container.innerHTML = ''; // Clear existing lines
-            console.log("Hide Horizontal Grid Lines button clicked");
+            console.log("Hide Hz Grid Lines");
             createParallelLines(container,vertLineNum);
         } else {
-            console.log("some nonsense");
+            console.log("Show Hz Grid Lines");
             createHzParallelLines(container,vertLineNum*3,spacingPixels);
         };
     });
 
+    verticalGridToggleButton.addEventListener("click", function () {
 
+        showVertLines = !showVertLines;
+        verticalGridToggleButton.textContent = !showVertLines? "Hide Vert Grid" : "Show Vert Grid"
+        // container.innerHTML = '';
+        // need to set CSS line width to zero px. 
+        // call the draw lines functions
+        console.log("verticalGridToggleButton has been clicked! woo!");
+
+        // do the reverse of this. 
+
+    });
 
 
     let currentScaleFactor = 1;
