@@ -30,7 +30,7 @@ $(document).ready(function () {
     let manualMoveEnabled = false;
     let showGrid = false;
     let showHzLines = false;
-    let showVertLines = false;
+    let showVertLines = true;
 
     function getSize() {
         $("#inputFile").change(function (e) {
@@ -270,14 +270,34 @@ $(document).ready(function () {
 
     verticalGridToggleButton.addEventListener("click", function () {
 
+        // showVertLines = true;
+        verticalGridToggleButton.textContent = showVertLines? "Hide Vert Grid" : "Show Vert Grid"
+        
+        if (showVertLines == true) {
+        container.innerHTML = '';
+        var styleSheet = document.styleSheets[0];
+        styleSheet.insertRule('.line { width: 0px !important; }', styleSheet.cssRules.length);         
+        createParallelLines(container, vertLineNum); // Recreate lines
+        if(!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); };
+        console.log("hide vert grid lines has been clicked! woo!");
         showVertLines = !showVertLines;
-        verticalGridToggleButton.textContent = !showVertLines? "Hide Vert Grid" : "Show Vert Grid"
-        // container.innerHTML = '';
-        // need to set CSS line width to zero px. 
-        // call the draw lines functions
-        console.log("verticalGridToggleButton has been clicked! woo!");
+        console.log(showVertLines);
+        
+        } else {
+            var styleSheet = document.styleSheets[0];
+            styleSheet.insertRule('.line { width: 1px !important; }', styleSheet.cssRules.length);
+            createParallelLines(container, vertLineNum); // Recreate lines
+            if(!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); };
+            console.log("verticalGridToggleButton has been clicked! woo!");
+            showVertLines = true;
+        }
+        
 
-        // do the reverse of this. 
+                // Loop through each element and set its width to 10px
+        // for (var i = 0; i < elements.length; i++) {
+        // elements[i].style.width = "4px";
+        // }
+        
 
     });
 
