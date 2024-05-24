@@ -29,14 +29,14 @@
     </div>
 
     <div>
-        <button id="toggleButton" class="toggle-button">Enable Manual Move</button>
+        <button hidden id="toggleButton" class="toggle-button">Enable Manual Move</button>
         <button id="gridToggleButton" class="toggle-button">Show Grid</button>
         <!-- <button id="horizontalGridToggleButton" class="toggle-button">Show Vertical Grid</button> -->
         <button id="horizontalGridToggleButton" class="toggle-button">Hide Hz Grid</button>
         <button id="verticalGridToggleButton" class="toggle-button">Hide Vert Grid</button>
 
                 
-        <button id="reCenterToggleButton" class="toggle-button">Re-center</button>
+        <button hidden id="reCenterToggleButton" class="toggle-button">Re-center</button>
 
         <label for="scaleSlider">Adjust Image Scale:</label>
         <input type="range" min="0.1" max="2" step="0.00005" value="1" class="slider" id="scaleSlider">
@@ -44,6 +44,8 @@
         <label for="scaleSlider">Number of gridlines:</label>
         <input type="range" min="3" max="60" step="2" value="1" class="slider" id="gridLineScaleSlider">
 
+        <button id="lineWeight" class="toggle-button">Line Weight</button>
+        <button id="lineColour" class="toggle-button">Line Colour</button>
         <button id="aboutButton" class="toggle-button">About</button>
         <!-- <label for="verticleGridLines">Number of Verticle Grid Lines:</label>
         <input type="range" min="0" max="30" step="5" value="1" class="slider" id="scaleSlider"> -->
