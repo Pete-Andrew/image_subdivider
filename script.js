@@ -8,7 +8,8 @@ $(document).ready(function () {
     const horizontalGridToggleButton = document.getElementById("horizontalGridToggleButton");
     const verticalGridToggleButton = document.getElementById("verticalGridToggleButton");
     const reCenterToggleButton = document.getElementById("reCenterToggleButton");
-    
+    const pauseButton = document.getElementById('pause-button');
+    const cameraOnButton = document.getElementById("cameraOnButton");  
     const container = document.getElementById('verticalLineDiv');
 
     let lineCount = 0; // Default number of horizontal lines
@@ -31,6 +32,9 @@ $(document).ready(function () {
     let showGrid = false;
     let showHzLines = false;
     let showVertLines = true;
+    let currentFacingMode = 'user'; // Default to front camera
+    let paused = false;
+    let cameraOn = false;
 
     function getSize() {
         $("#inputFile").change(function (e) {
@@ -332,4 +336,72 @@ $(document).ready(function () {
     reCenterToggleButton.addEventListener("click", function () {
         reapplyScaleFactor();
     });
+
+
+    
+async function startCamera(facingMode) {
+    paused = false;
+    pauseButton.textContent = "Pause";
+    
+    const video = document.getElementById('camera-feed');
+
+    // Stop any existing video stream
+    if (video.srcObject) {
+        video.srcObject.getTracks().forEach(track => track.stop());
+    }
+
+    try {
+        // Request access to the camera with the specified facingMode
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: facingMode },
+            audio: false
+        });
+
+        // Set the video element's srcObject to the camera stream
+        video.srcObject = stream;
+
+        // Play the video
+        video.onloadedmetadata = () => {
+            video.play();
+        };
+    } catch (err) {
+        console.error("Error accessing the camera: ", err);
+        if (err.name === 'OverconstrainedError') {
+            console.error(`The requested facingMode: ${facingMode} is not available.`);
+        }
+    }
+}
+
+// section of code that targets live camera feed
+document.getElementById('toggle-camera-button').addEventListener('click', () => {
+    // Toggle the facing mode
+    currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+    startCamera(currentFacingMode);
+});
+
+pauseButton.addEventListener('click', () => {
+    
+    pauseButton.textContent = paused ? "Pause" : "Play";
+    if (paused == false) {
+    paused = true;
+    const video = document.getElementById('camera-feed');
+    video.pause()
+    console.log("video paused");
+
+} else {
+    paused = false;
+    startCamera(currentFacingMode);
+    console.log("video un-paused"); 
+    }
+
+});
+
+// Start with the default camera
+cameraOnButton.addEventListener('click', () => {
+    cameraOnButton.textContent = cameraOn? "Camera Off" : "Camera On";
+    startCamera(currentFacingMode);
+})
+
+
+
 });

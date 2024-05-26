@@ -32,9 +32,7 @@
     /* padding-top: 40vh; */
     border: 2px solid #2d3030;
     background: #F5F5F5;
-    overflow: hidden;
-    
-    
+    overflow: hidden;    
 }
 
 canvas {
@@ -57,20 +55,6 @@ canvas {
     border-radius: 5px;
     cursor: pointer;
 }
-
-/* #verticalLine { */
-    
-    
-    /* position: absolute; */
-    /* top: 0; */
-    /* left: 50%; */
-    /* width: 1px;  */
-    /* height: 100%;  */
-    /* background-color: black;  */
-    
-    /* Ensure the line is above the image */
-    /* z-index: 2;  */
-/* } */
 
 #infoDiv {
     /* padding pushes it down the container */
@@ -126,4 +110,14 @@ background-color: #F5F5F5;
     background-color: black;
     /* background-color: white; */
     z-index: 4;
+}
+
+#camera-feed {
+    position: absolute;
+    width: auto; /* Adjust as needed */
+    height: auto;
+    max-width: 1000px; /* Limit the max width for better visibility */
+    border: 5px solid #181818;
+    border-radius: 10px; /* Optional: rounded corners */
+    z-index: 3;
 }
