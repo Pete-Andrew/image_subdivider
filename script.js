@@ -44,13 +44,20 @@ $(document).ready(function () {
                 img = new Image();
 
                 img.onload = function () {
+                    
                     imgWidth = this.width;
                     imgHeight = this.height;
+                    // logs out the size of the imported im in px
+                    console.log("raw imported Width of img (imgWidth) in px = " + imgWidth);
+                    console.log("raw imported Height of img (imgHeight) in px = " + imgHeight);
                 };
 
                 img.onerror = function () {
                     alert("not a valid file: " + file.type);
                 };
+
+                // Log the name of the uploaded file
+                console.log("Name of the uploaded image: " + file.name);
 
                 img.src = URL.createObjectURL(file);
             }
@@ -59,14 +66,18 @@ $(document).ready(function () {
 
     getSize();
 
-    //gets the width of the 'imageView' div, which holds the imageyy
-    function getImageViewWidth(imageView){
+    //need to get the on screen size of the image...
+    //get the name of the image
+
+    //gets the width of the 'imageView' div, which holds the image
+        function getImageViewWidth(imageView){
         totalImageViewWidth = Number(imageView.offsetWidth);
         console.log("Image View width = " + totalImageViewWidth);    
         return totalImageViewWidth;
     }       
-    getImageViewWidth(imageView);
+    // getImageViewWidth(imageView); //doesn't need to be called here as it is also called in the measure line spaces function
 
+    // uploads the image as either a drag and drop or an open file
     function uploadImage(file) {
         let imgLink = URL.createObjectURL(file);
         backgroundImage.style.backgroundImage = `url(${imgLink})`;
@@ -75,6 +86,7 @@ $(document).ready(function () {
     inputFile.addEventListener("change", function () {
         if (this.files.length > 0) {
             uploadImage(this.files[0]);
+            
         }
     });
 
@@ -169,6 +181,7 @@ $(document).ready(function () {
         }
     }
 
+    // the manual move button to let you reposition the image
     toggleButton.addEventListener("click", function () {
         manualMoveEnabled = !manualMoveEnabled;
         toggleButton.textContent = manualMoveEnabled ? "Disable Manual Move" : "Enable Manual Move";
@@ -180,6 +193,7 @@ $(document).ready(function () {
         }
     });
 
+    // toggles the grid on and off
     gridToggleButton.addEventListener("click", function () {
         showGrid = !showGrid;
         gridToggleButton.textContent = showGrid ? "Hide Grid" : "Show Grid";
@@ -201,16 +215,19 @@ $(document).ready(function () {
     }
     updateGrid(container);
 
+
     function measureLineSpace(container, vertLineNum){
         getImageViewWidth(imageView); // updates the totalImageView width global variable. 
         spacingPixels = totalImageViewWidth / (vertLineNum-1) // have to -1 to get the correct scale e.g. make all the division cubes
         if (!showHzLines) {createHzParallelLines(container, lineCount, spacingPixels);} //calls this function with updated spacing pixels IF showHzLines bool is true. 
     }
 
+    //resizes the grid if the window size is changed
     window.addEventListener('resize', function () {
         updateGrid(container);
     });
 
+    // functions for creating the lines
     function createVerticalLine(container, offsetPercentage) {
         const line = document.createElement('div');
         line.classList.add('line');
@@ -222,7 +239,7 @@ $(document).ready(function () {
         const spacingPercentage = 100 / (count - 1); // Calculate percentage-based spacing
         for (let i = 0; i < count; i++) {
             createVerticalLine(container, i * spacingPercentage);
-            console.log("createParallelLines func called");
+            // console.log("createParallelLines func called");
         }
     };
 
@@ -337,7 +354,7 @@ $(document).ready(function () {
         reapplyScaleFactor();
     });
 
-
+// functions for the camera
     
 async function startCamera(facingMode) {
     paused = false;
@@ -379,6 +396,7 @@ document.getElementById('toggle-camera-button').addEventListener('click', () => 
     startCamera(currentFacingMode);
 });
 
+// pause button for the camera feed
 pauseButton.addEventListener('click', () => {
     
     pauseButton.textContent = paused ? "Pause" : "Play";
