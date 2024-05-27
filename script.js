@@ -9,14 +9,14 @@ $(document).ready(function () {
     const verticalGridToggleButton = document.getElementById("verticalGridToggleButton");
     const reCenterToggleButton = document.getElementById("reCenterToggleButton");
     const pauseButton = document.getElementById('pause-button');
-    const cameraOnButton = document.getElementById("cameraOnButton");  
+    const cameraOnButton = document.getElementById('cameraOnButton');
     const container = document.getElementById('verticalLineDiv');
 
     let lineCount = 0; // Default number of horizontal lines
     let spacingPixels = 0; // Adjust this value as needed
 
     container.style.display = "none";
-    
+
     let totalImageViewWidth = 0;
     let widthMinusLines = 0;
     let imgWidth = 0;
@@ -44,7 +44,7 @@ $(document).ready(function () {
                 img = new Image();
 
                 img.onload = function () {
-                    
+
                     imgWidth = this.width;
                     imgHeight = this.height;
                     // logs out the size of the imported im in px
@@ -66,15 +66,17 @@ $(document).ready(function () {
 
     getSize();
 
-    //need to get the on screen size of the image...
-    //get the name of the image
+    //botton to set the grid lines to the size of the image rather than the container... 
+    //be able to move the image up/sideways with sliders 
+    //save image/location/scaling info in local data
+    //
 
     //gets the width of the 'imageView' div, which holds the image
-        function getImageViewWidth(imageView){
+    function getImageViewWidth(imageView) {
         totalImageViewWidth = Number(imageView.offsetWidth);
-        console.log("Image View width = " + totalImageViewWidth);    
+        console.log("Image View width = " + totalImageViewWidth);
         return totalImageViewWidth;
-    }       
+    }
     // getImageViewWidth(imageView); //doesn't need to be called here as it is also called in the measure line spaces function
 
     // uploads the image as either a drag and drop or an open file
@@ -86,7 +88,7 @@ $(document).ready(function () {
     inputFile.addEventListener("change", function () {
         if (this.files.length > 0) {
             uploadImage(this.files[0]);
-            
+
         }
     });
 
@@ -108,16 +110,16 @@ $(document).ready(function () {
     // updates the grid lines when the slider is changed
     $("#gridLineScaleSlider").on("input", function () {
         vertLineNum = $(this).val();
-        lineCount = vertLineNum*3; // *3 makes sure there are always enough horizontal grid lines (unless the image is ridiculously distorted)
+        lineCount = vertLineNum * 3; // *3 makes sure there are always enough horizontal grid lines (unless the image is ridiculously distorted)
         console.log("vertLineNum = " + vertLineNum);
         console.log("Container width = " + container.offsetWidth + " px");
         container.innerHTML = ''; // Clear existing lines    
-                    
-        spacingPixels = totalImageViewWidth / (vertLineNum-1) // have to -1 to get the correct scale e.g. make all the division cubes
+
+        spacingPixels = totalImageViewWidth / (vertLineNum - 1) // have to -1 to get the correct scale e.g. make all the division cubes
         console.log("line spacing in PX = " + spacingPixels);
 
         createParallelLines(container, vertLineNum); // Recreate lines
-        if(!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); };
+        if (!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); };
     });
 
     imageView.addEventListener("mousedown", startDragging);
@@ -209,17 +211,17 @@ $(document).ready(function () {
     // this function redraws the lines when the grid is re-sized
     function updateGrid(container) {
         container.innerHTML = ''; // Clear existing lines
-    
+
         createParallelLines(container, vertLineNum); // Recreate lines
         measureLineSpace(container, vertLineNum)
     }
     updateGrid(container);
 
 
-    function measureLineSpace(container, vertLineNum){
+    function measureLineSpace(container, vertLineNum) {
         getImageViewWidth(imageView); // updates the totalImageView width global variable. 
-        spacingPixels = totalImageViewWidth / (vertLineNum-1) // have to -1 to get the correct scale e.g. make all the division cubes
-        if (!showHzLines) {createHzParallelLines(container, lineCount, spacingPixels);} //calls this function with updated spacing pixels IF showHzLines bool is true. 
+        spacingPixels = totalImageViewWidth / (vertLineNum - 1) // have to -1 to get the correct scale e.g. make all the division cubes
+        if (!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); } //calls this function with updated spacing pixels IF showHzLines bool is true. 
     }
 
     //resizes the grid if the window size is changed
@@ -254,18 +256,14 @@ $(document).ready(function () {
     function createHzParallelLines(container, count, spacingPixels) {
         const containerHeight = imageView.clientHeight; // Get the container height
         const centerOffset = containerHeight / 2; // Calculate the center position
-
         // Calculate the initial offset for the first line to be at the center
         const initialOffset = centerOffset;
-
         // Create the central line
         createHorizontalLine(container, initialOffset);
-
         // Create lines above the central line
         for (let i = 1; i < Math.ceil(count / 2); i++) {
             createHorizontalLine(container, initialOffset - i * spacingPixels);
         }
-
         // Create lines below the central line
         for (let i = 1; i < Math.floor(count / 2); i++) {
             createHorizontalLine(container, initialOffset + i * spacingPixels);
@@ -282,43 +280,43 @@ $(document).ready(function () {
         if (showHzLines) {
             container.innerHTML = ''; // Clear existing lines
             console.log("Hide Hz Grid Lines");
-            createParallelLines(container,vertLineNum);
+            createParallelLines(container, vertLineNum);
         } else {
             console.log("Show Hz Grid Lines");
-            createHzParallelLines(container,vertLineNum*3,spacingPixels);
+            createHzParallelLines(container, vertLineNum * 3, spacingPixels);
         };
     });
 
     verticalGridToggleButton.addEventListener("click", function () {
 
         // showVertLines = true;
-        verticalGridToggleButton.textContent = showVertLines? "Hide Vert Grid" : "Show Vert Grid"
-        
+        verticalGridToggleButton.textContent = showVertLines ? "Hide Vert Grid" : "Show Vert Grid"
+
         if (showVertLines == true) {
-        container.innerHTML = '';
-        var styleSheet = document.styleSheets[0];
-        styleSheet.insertRule('.line { width: 0px !important; }', styleSheet.cssRules.length);         
-        createParallelLines(container, vertLineNum); // Recreate lines
-        if(!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); };
-        console.log("hide vert grid lines has been clicked! woo!");
-        showVertLines = !showVertLines;
-        console.log(showVertLines);
-        
+            container.innerHTML = '';
+            var styleSheet = document.styleSheets[0];
+            styleSheet.insertRule('.line { width: 0px !important; }', styleSheet.cssRules.length);
+            createParallelLines(container, vertLineNum); // Recreate lines
+            if (!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); };
+            console.log("hide vert grid lines has been clicked! woo!");
+            showVertLines = !showVertLines;
+            console.log(showVertLines);
+
         } else {
             var styleSheet = document.styleSheets[0];
             styleSheet.insertRule('.line { width: 1px !important; }', styleSheet.cssRules.length);
             createParallelLines(container, vertLineNum); // Recreate lines
-            if(!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); };
+            if (!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); };
             console.log("verticalGridToggleButton has been clicked! woo!");
             showVertLines = true;
         }
-        
 
-                // Loop through each element and set its width to 10px
+
+        // Loop through each element and set its width to 10px
         // for (var i = 0; i < elements.length; i++) {
         // elements[i].style.width = "4px";
         // }
-        
+
 
     });
 
@@ -354,71 +352,71 @@ $(document).ready(function () {
         reapplyScaleFactor();
     });
 
-// functions for the camera
-    
-async function startCamera(facingMode) {
-    paused = false;
-    pauseButton.textContent = "Pause";
-    
-    const video = document.getElementById('camera-feed');
+    // functions for the camera
 
-    // Stop any existing video stream
-    if (video.srcObject) {
-        video.srcObject.getTracks().forEach(track => track.stop());
-    }
+    async function startCamera(facingMode) {
+        paused = false;
+        pauseButton.textContent = "Pause";
 
-    try {
-        // Request access to the camera with the specified facingMode
-        const stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: facingMode },
-            audio: false
-        });
+        const video = document.getElementById('camera-feed');
 
-        // Set the video element's srcObject to the camera stream
-        video.srcObject = stream;
+        // Stop any existing video stream
+        if (video.srcObject) {
+            video.srcObject.getTracks().forEach(track => track.stop());
+        }
 
-        // Play the video
-        video.onloadedmetadata = () => {
-            video.play();
-        };
-    } catch (err) {
-        console.error("Error accessing the camera: ", err);
-        if (err.name === 'OverconstrainedError') {
-            console.error(`The requested facingMode: ${facingMode} is not available.`);
+        try {
+            // Request access to the camera with the specified facingMode
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: facingMode },
+                audio: false
+            });
+
+            // Set the video element's srcObject to the camera stream
+            video.srcObject = stream;
+
+            // Play the video
+            video.onloadedmetadata = () => {
+                video.play();
+            };
+        } catch (err) {
+            console.error("Error accessing the camera: ", err);
+            if (err.name === 'OverconstrainedError') {
+                console.error(`The requested facingMode: ${facingMode} is not available.`);
+            }
         }
     }
-}
 
-// section of code that targets live camera feed
-document.getElementById('toggle-camera-button').addEventListener('click', () => {
-    // Toggle the facing mode
-    currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
-    startCamera(currentFacingMode);
-});
+    // section of code that targets live camera feed
+    document.getElementById('toggle-camera-button').addEventListener('click', () => {
+        // Toggle the facing mode
+        currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+        startCamera(currentFacingMode);
+    });
 
-// pause button for the camera feed
-pauseButton.addEventListener('click', () => {
-    
-    pauseButton.textContent = paused ? "Pause" : "Play";
-    if (paused == false) {
-    paused = true;
-    const video = document.getElementById('camera-feed');
-    video.pause()
-    console.log("video paused");
+    // pause button for the camera feed
+    pauseButton.addEventListener('click', () => {
 
-} else {
-    paused = false;
-    startCamera(currentFacingMode);
-    console.log("video un-paused"); 
-    }
+        pauseButton.textContent = paused ? "Pause" : "Play";
+        if (paused == false) {
+            paused = true;
+            const video = document.getElementById('camera-feed');
+            video.pause()
+            console.log("video paused");
 
-});
+        } else {
+            paused = false;
+            startCamera(currentFacingMode);
+            console.log("video un-paused");
+        }
 
-// Start with the default camera
-cameraOnButton.addEventListener('click', () => {
-    cameraOnButton.textContent = cameraOn? "Camera Off" : "Camera On";
-    startCamera(currentFacingMode);
-})
+    });
+
+    // Start with the default camera
+    cameraOnButton.addEventListener('click', () => {
+        cameraOnButton.textContent = cameraOn ? "Camera Off" : "Camera On";
+        startCamera(currentFacingMode);
+    })
 
 
 
