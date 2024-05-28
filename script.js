@@ -11,6 +11,10 @@ $(document).ready(function () {
     const pauseButton = document.getElementById('pause-button');
     const cameraOnButton = document.getElementById('cameraOnButton');
     const container = document.getElementById('verticalLineDiv');
+    const fineSizeUpButton = document.getElementById('fineSizeUp');
+    const fineSizeDownButton = document.getElementById('fineSizeDown');
+
+
 
     let lineCount = 0; // Default number of horizontal lines
     let spacingPixels = 0; // Adjust this value as needed
@@ -22,7 +26,10 @@ $(document).ready(function () {
     let imgWidth = 0;
     let imgHeight = 0;
     let vertLineNum = 3;
+    let scale = 1;
     let scaleFactor = 1;
+    let currentScaleFactor = 1;
+
     let isDragging = false;
     let initialX;
     let initialY;
@@ -66,7 +73,7 @@ $(document).ready(function () {
 
     getSize();
 
-    //botton to set the grid lines to the size of the image rather than the container... 
+    //button to set the grid lines to the size of the image rather than the container... 
     //be able to move the image up/sideways with sliders 
     //save image/location/scaling info in local data
     //
@@ -98,14 +105,31 @@ $(document).ready(function () {
         let translateX = offsetX - (backgroundImage.offsetWidth / 2);
         let translateY = offsetY - (backgroundImage.offsetHeight / 2);
         backgroundImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        console.log("scale = " + scale);
     }
 
     // listens for the scale slider 
     $("#scaleSlider").on("input", function () {
-        let scale = $(this).val();
+        scale = parseFloat($(this).val());  //parseFloat enables the fine size buttons to work if the image has been re-scaled with the slider
         console.log("current scale = " + scale);
         updateBackgroundScale(scale);
     });
+    
+
+    fineSizeUpButton.addEventListener('click', function () {
+        scale += 0.05;
+        //needs to update the scale slider value
+        //needs to set a max of 2 for scale and a min of 0.1
+        updateBackgroundScale(scale);
+    });
+
+    fineSizeDownButton.addEventListener('click', function () {
+        scale -= 0.05;
+        //needs to update the scale slider value
+        //needs to set a max of 2 for scale and a min of 0.1
+        updateBackgroundScale(scale);
+    });
+
 
     // updates the grid lines when the slider is changed
     $("#gridLineScaleSlider").on("input", function () {
@@ -319,9 +343,6 @@ $(document).ready(function () {
 
 
     });
-
-
-    let currentScaleFactor = 1;
 
     function clearManipulations() {
         backgroundImage.style.backgroundPosition = "";

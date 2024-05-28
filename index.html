@@ -17,6 +17,7 @@
                 <video hidden id="camera-feed" autoplay playsinline></video>
                 
                 <div id="hiddenContainer" style="visibility: hidden; position: absolute; top: -9999px;"></div>
+                
                 <div id="backgroundImage"></div>
                 
                 <div id="infoDiv">
@@ -37,9 +38,11 @@
         <button hidden id="reCenterToggleButton" class="toggle-button">Re-center</button>
 
         <label for="scaleSlider">Adjust Image Scale:</label>
+        <button class="toggle-button" id="fineSizeDown"> ◄ </button>
         <input type="range" min="0.1" max="2" step="0.001" value="1" class="slider" id="scaleSlider">
+        <button class="toggle-button" id="fineSizeUp"> ► </button>
 
-        <label for="scaleSlider">Number of gridlines:</label>
+        <label for="gridSlider">Number of gridlines:</label>
         <input type="range" min="3" max="60" step="2" value="1" class="slider" id="gridLineScaleSlider">
 
         <button id="lineWeight" class="toggle-button">Line Weight</button>
@@ -49,7 +52,7 @@
         <button hidden id="cameraOnButton" class="toggle-button">Camera On</button>
         <button hidden id="toggle-camera-button" class="toggle-button">Switch Camera</button>
         <button hidden id="pause-button" class="toggle-button">Pause</button>
-        <label hidden for="scaleSlider">Video Opacity</label>
+        <label hidden for="opacityScaleSlider">Video Opacity</label>
         <input hidden type="range" min="1" max="10" step="1" value="1" class="slider" id="opacitySlider">
         
     </div>
