@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Scale Adjustment</title>
     <link rel="stylesheet" href="styles.css"> <!-- Link the external CSS file -->
+    
 
 </head>
 <body>
@@ -29,6 +30,16 @@
             </div>
         </label>
     </div>
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" id="closeNavButton">&times;</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Clients</a>
+        <a href="#">Contact</a>
+    </div>
+
+    <span hidden style="font-size:30px;cursor:pointer" id="openNavButton">&#9776; open</span>
 
     <div>
         <button hidden id="toggleButton" class="toggle-button">Enable Manual Move</button>
@@ -60,6 +71,7 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+   
     <script src="script.js"></script>
 </body>
 </html>

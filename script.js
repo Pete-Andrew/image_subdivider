@@ -15,17 +15,14 @@ $(document).ready(function () {
     const fineSizeDownButton = document.getElementById('fineSizeDown');
     const courseSizeUpButton = document.getElementById('courseSizeUp');
     const courseSizeDownButton = document.getElementById('courseSizeDown');
-
+    const openNavButton = document.getElementById('openNavButton');
+    const closeNavButton = document.getElementById('closeNavButton');
     const scaleSlider = $('#scaleSlider');
 
     let scaleSliderValue = parseFloat(scaleSlider.val()); // Initialize scale value
-    console.log("scale slider value = " + scaleSliderValue);
-
+    // console.log("scale slider value = " + scaleSliderValue);
     let lineCount = 0; // Default number of horizontal lines
     let spacingPixels = 0; // Adjust this value as needed
-
-    container.style.display = "none";
-
     let totalImageViewWidth = 0;
     let widthMinusLines = 0;
     let imgWidth = 0;
@@ -36,7 +33,6 @@ $(document).ready(function () {
     let currentScaleFactor = 1;
     let scaleMax = 2;
     let scaleMin = 0.1;
-
     let isDragging = false;
     let initialX;
     let initialY;
@@ -49,6 +45,16 @@ $(document).ready(function () {
     let currentFacingMode = 'user'; // Default to front camera
     let paused = false;
     let cameraOn = false;
+
+    container.style.display = "none";
+
+    openNavButton.addEventListener('click', function () {
+            document.getElementById("mySidenav").style.width = "350px";
+      });
+      
+    closeNavButton.addEventListener('click', function () {
+        document.getElementById("mySidenav").style.width = "0px";
+    });
 
     function getSize() {
         $("#inputFile").change(function (e) {
