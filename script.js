@@ -13,8 +13,13 @@ $(document).ready(function () {
     const container = document.getElementById('verticalLineDiv');
     const fineSizeUpButton = document.getElementById('fineSizeUp');
     const fineSizeDownButton = document.getElementById('fineSizeDown');
+    const courseSizeUpButton = document.getElementById('courseSizeUp');
+    const courseSizeDownButton = document.getElementById('courseSizeDown');
 
+    const scaleSlider = $('#scaleSlider');
 
+    let scaleSliderValue = parseFloat(scaleSlider.val()); // Initialize scale value
+    console.log("scale slider value = " + scaleSliderValue);
 
     let lineCount = 0; // Default number of horizontal lines
     let spacingPixels = 0; // Adjust this value as needed
@@ -29,6 +34,8 @@ $(document).ready(function () {
     let scale = 1;
     let scaleFactor = 1;
     let currentScaleFactor = 1;
+    let scaleMax = 2;
+    let scaleMin = 0.1;
 
     let isDragging = false;
     let initialX;
@@ -112,24 +119,66 @@ $(document).ready(function () {
     $("#scaleSlider").on("input", function () {
         scale = parseFloat($(this).val());  //parseFloat enables the fine size buttons to work if the image has been re-scaled with the slider
         console.log("current scale = " + scale);
+        scaleSliderValue = scale;
         updateBackgroundScale(scale);
+
     });
     
 
+    courseSizeUpButton.addEventListener('click', function () {
+        if (scale < 2) {
+            scale += 0.005;
+            // scaleSliderValue = scale +=0.05;
+            scaleSliderValue = Math.min(scaleSliderValue + 0.005, 2); // Ensure scale doesn't exceed max value
+            scaleSlider.val(scaleSliderValue);
+            //needs to update the scale slider value
+            //needs to set a max of 2 for scale and a min of 0.1
+            updateBackgroundScale(scale);
+            
+            } else {
+                console.log("max scale reached");
+            }
+    });
+
     fineSizeUpButton.addEventListener('click', function () {
-        scale += 0.05;
+        if (scale < 2) {
+        scale += 0.0005;
+        // scaleSliderValue = scale +=0.05;
+        scaleSliderValue = Math.min(scaleSliderValue + 0.0005, 2); // Ensure scale doesn't exceed max value
+        scaleSlider.val(scaleSliderValue);
         //needs to update the scale slider value
         //needs to set a max of 2 for scale and a min of 0.1
         updateBackgroundScale(scale);
+        
+        } else {
+            console.log("max scale reached");
+        }
+    });
+
+    courseSizeDownButton.addEventListener('click', function () {
+        if (scale > 0.1) {
+            scale -= 0.005;
+            // scaleSliderValue = scale +=0.05;
+            scaleSliderValue = Math.min(scaleSliderValue - 0.005, 2); // Ensure scale doesn't exceed max value
+            scaleSlider.val(scaleSliderValue);
+            updateBackgroundScale(scale);
+            
+            } else {
+                console.log("max scale reached");
+            }
     });
 
     fineSizeDownButton.addEventListener('click', function () {
-        scale -= 0.05;
-        //needs to update the scale slider value
-        //needs to set a max of 2 for scale and a min of 0.1
+        if (scale > 0.1) {
+        scale -= 0.0005;
+        scaleSliderValue = Math.min(scaleSliderValue - 0.0005, 2); // Ensure scale doesn't exceed max value
+        scaleSlider.val(scaleSliderValue);
         updateBackgroundScale(scale);
+        
+    } else {
+        console.log("min scale reached");
+    }
     });
-
 
     // updates the grid lines when the slider is changed
     $("#gridLineScaleSlider").on("input", function () {
@@ -335,12 +384,10 @@ $(document).ready(function () {
             showVertLines = true;
         }
 
-
         // Loop through each element and set its width to 10px
         // for (var i = 0; i < elements.length; i++) {
         // elements[i].style.width = "4px";
         // }
-
 
     });
 
@@ -438,7 +485,5 @@ $(document).ready(function () {
         cameraOnButton.textContent = cameraOn ? "Camera Off" : "Camera On";
         startCamera(currentFacingMode);
     })
-
-
 
 });
