@@ -10,7 +10,7 @@ $(document).ready(function () {
     const reCenterToggleButton = document.getElementById("reCenterToggleButton");
     const pauseButton = document.getElementById('pause-button');
     const cameraOnButton = document.getElementById('cameraOnButton');
-    const container = document.getElementById('verticalLineDiv');
+    let container = document.getElementById('verticalLineDiv');
     const fineSizeUpButton = document.getElementById('fineSizeUp');
     const fineSizeDownButton = document.getElementById('fineSizeDown');
     const courseSizeUpButton = document.getElementById('courseSizeUp');
@@ -18,6 +18,7 @@ $(document).ready(function () {
     const openNavButton = document.getElementById('openNavButton');
     const closeNavButton = document.getElementById('closeNavButton');
     const scaleSlider = $('#scaleSlider');
+    const gridFullWidthButton = document.getElementById('gridFullWidthToggleButton');
 
     let scaleSliderValue = parseFloat(scaleSlider.val()); // Initialize scale value
     // console.log("scale slider value = " + scaleSliderValue);
@@ -45,8 +46,17 @@ $(document).ready(function () {
     let currentFacingMode = 'user'; // Default to front camera
     let paused = false;
     let cameraOn = false;
+    let gridFullContainerWidth = true;
+    let imgLoaded = false;
 
     container.style.display = "none";
+
+    gridFullWidthButton.addEventListener('click', function () {
+        gridFullContainerWidth = !gridFullContainerWidth;
+        gridFullWidthButton.textContent = gridFullContainerWidth ? "Image Only Grid" : "Full Grid";
+        //make container = the space taken up by the uploaded image IF an image is uploaded. 
+
+    });
 
     openNavButton.addEventListener('click', function () {
             document.getElementById("mySidenav").style.width = "350px";
@@ -80,6 +90,8 @@ $(document).ready(function () {
                 console.log("Name of the uploaded image: " + file.name);
 
                 img.src = URL.createObjectURL(file);
+                imgLoaded = true;
+                console.log("image loaded = " + imgLoaded);
             }
         });
     };
