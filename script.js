@@ -18,7 +18,8 @@ $(document).ready(function () {
     const closeNavButton = document.getElementById('closeNavButton');
     const scaleSlider = $('#scaleSlider');
     const gridFullWidthButton = document.getElementById('gridFullWidthToggleButton');
-    let container = document.getElementById('verticalLineDiv');
+    const testColourDiv = document.getElementById('testColourDiv');
+    const container = document.getElementById('verticalLineDiv');
     
 
     let scaleSliderValue = parseFloat(scaleSlider.val()); // Initialize scale value
@@ -49,13 +50,22 @@ $(document).ready(function () {
     let cameraOn = false;
     let gridFullContainerWidth = true;
     let imgLoaded = false;
+    let testDivVisible = true;
 
     container.style.display = "none";
 
     gridFullWidthButton.addEventListener('click', function () {
         gridFullContainerWidth = !gridFullContainerWidth;
         gridFullWidthButton.textContent = gridFullContainerWidth ? "Image Only Grid" : "Full Grid";
-
+        if (testDivVisible == true) {
+        testColourDiv.style.display = "none";
+        testDivVisible = false;
+        console.log("test Div Visible = " + testDivVisible);
+        } else {
+            testColourDiv.style.display = "block";
+            testDivVisible = true;
+            console.log("test Div Visible = " + testDivVisible);
+        }
         //make container = the space taken up by the uploaded image IF an image is uploaded. 
 
     });
