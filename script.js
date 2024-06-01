@@ -51,9 +51,12 @@ $(document).ready(function () {
     let gridFullContainerWidth = true;
     let imgLoaded = false;
     let testDivVisible = true;
+    let backgroundImageDivWidth = 0;
+    let backgroundImageDivHeight = 0;
 
     container.style.display = "none";
 
+    // deals with 
     gridFullWidthButton.addEventListener('click', function () {
         gridFullContainerWidth = !gridFullContainerWidth;
         gridFullWidthButton.textContent = gridFullContainerWidth ? "Image Only Grid" : "Full Grid";
@@ -65,6 +68,11 @@ $(document).ready(function () {
             testColourDiv.style.display = "block";
             testDivVisible = true;
             console.log("test Div Visible = " + testDivVisible);
+            // sets size of test div
+            testColourDiv.style.width = backgroundImageDivWidth + "px";
+            console.log("test colour div width = " + testColourDiv.style.width);
+            testColourDiv.style.height = imgHeight + "px";
+            console.log("test colour div height = " +  testColourDiv.style.height);
         }
         //make container = the space taken up by the uploaded image IF an image is uploaded. 
 
@@ -92,6 +100,12 @@ $(document).ready(function () {
                     // logs out the size of the imported im in px
                     console.log("raw imported Width of img (imgWidth) in px = " + imgWidth);
                     console.log("raw imported Height of img (imgHeight) in px = " + imgHeight);
+                    
+                    backgroundImageDivWidth = backgroundImage.offsetWidth;
+                    backgroundImageDivHeight = backgroundImage.offsetHeight;
+                    console.log("width of background image Div = " + backgroundImageDivWidth);
+                    console.log("height of background image Div = " + backgroundImageDivHeight);
+
                 };
 
                 img.onerror = function () {
