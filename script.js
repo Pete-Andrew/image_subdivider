@@ -10,7 +10,6 @@ $(document).ready(function () {
     const reCenterToggleButton = document.getElementById("reCenterToggleButton");
     const pauseButton = document.getElementById('pause-button');
     const cameraOnButton = document.getElementById('cameraOnButton');
-    let container = document.getElementById('verticalLineDiv');
     const fineSizeUpButton = document.getElementById('fineSizeUp');
     const fineSizeDownButton = document.getElementById('fineSizeDown');
     const courseSizeUpButton = document.getElementById('courseSizeUp');
@@ -19,6 +18,8 @@ $(document).ready(function () {
     const closeNavButton = document.getElementById('closeNavButton');
     const scaleSlider = $('#scaleSlider');
     const gridFullWidthButton = document.getElementById('gridFullWidthToggleButton');
+    let container = document.getElementById('verticalLineDiv');
+    
 
     let scaleSliderValue = parseFloat(scaleSlider.val()); // Initialize scale value
     // console.log("scale slider value = " + scaleSliderValue);
@@ -54,6 +55,7 @@ $(document).ready(function () {
     gridFullWidthButton.addEventListener('click', function () {
         gridFullContainerWidth = !gridFullContainerWidth;
         gridFullWidthButton.textContent = gridFullContainerWidth ? "Image Only Grid" : "Full Grid";
+
         //make container = the space taken up by the uploaded image IF an image is uploaded. 
 
     });
