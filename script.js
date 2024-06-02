@@ -52,6 +52,7 @@ $(document).ready(function () {
     let testDivVisible = true;
     let backgroundImageDivWidth = 0;
     let backgroundImageDivHeight = 0;
+    let imageImportScaleUp = 0;
 
     container.style.display = "none";
 
@@ -68,9 +69,14 @@ $(document).ready(function () {
             testDivVisible = true;
             console.log("test Div Visible = " + testDivVisible);
             // sets size of test div
-            testColourDiv.style.width = imgWidth + "px";
+
+            // currently only works if image is taller than it is wide... 
+            testColourDiv.style.width = (imageImportScaleUp*imgWidth) + "px";
+            // testColourDiv.style.width = imgWidth + "px";
             console.log("test colour div width = " + testColourDiv.style.width);
-            testColourDiv.style.height = imgHeight + "px";
+            
+            testColourDiv.style.height = (imageImportScaleUp*imgHeight) + "px";
+            // testColourDiv.style.height = imgHeight + "px";
             console.log("test colour div height = " +  testColourDiv.style.height);
         }
         //make container = the space taken up by the uploaded image IF an image is uploaded. 
@@ -79,19 +85,17 @@ $(document).ready(function () {
     
     // as the imported image is scaled to fill the div 100%...
     // take the uploaded size of the image, then it's full screen height or width (whichever is bigger)
-    function findImportedImageScaling () { 
+    function findImportedImageScaling () {
+         
     let differenceInScale = totalImageViewHeight - imgHeight;
     console.log("difference in height of the imported img to the space it takes in the div = " + differenceInScale); 
     // Calculate how much it has been scaled (either positive or negative)
-    //
-
+    imageImportScaleUp = totalImageViewHeight/imgHeight;
+    console.log ("Image View div height / actual image height = " + imageImportScaleUp);  
+    
     };
-
     // work out the difference between the div width or height (depending on which ever is bigger)
-
     // scale the test colour div so that it is the same size/dimensions of the imported image 
-
-
 
     openNavButton.addEventListener('click', function () {
             document.getElementById("mySidenav").style.width = "350px";
