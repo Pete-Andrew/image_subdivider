@@ -27,6 +27,7 @@ $(document).ready(function () {
     let lineCount = 0; // Default number of horizontal lines
     let spacingPixels = 0; // Adjust this value as needed
     let totalImageViewWidth = 0;
+    let totalImageViewHeight = 0;
     let widthMinusLines = 0;
     let imgWidth = 0;
     let imgHeight = 0;
@@ -34,8 +35,6 @@ $(document).ready(function () {
     let scale = 1;
     let scaleFactor = 1;
     let currentScaleFactor = 1;
-    let scaleMax = 2;
-    let scaleMin = 0.1;
     let isDragging = false;
     let initialX;
     let initialY;
@@ -69,7 +68,7 @@ $(document).ready(function () {
             testDivVisible = true;
             console.log("test Div Visible = " + testDivVisible);
             // sets size of test div
-            testColourDiv.style.width = backgroundImageDivWidth + "px";
+            testColourDiv.style.width = imgWidth + "px";
             console.log("test colour div width = " + testColourDiv.style.width);
             testColourDiv.style.height = imgHeight + "px";
             console.log("test colour div height = " +  testColourDiv.style.height);
@@ -77,6 +76,22 @@ $(document).ready(function () {
         //make container = the space taken up by the uploaded image IF an image is uploaded. 
 
     });
+    
+    // as the imported image is scaled to fill the div 100%...
+    // take the uploaded size of the image, then it's full screen height or width (whichever is bigger)
+    function findImportedImageScaling () { 
+    let differenceInScale = totalImageViewHeight - imgHeight;
+    console.log("difference in height of the imported img to the space it takes in the div = " + differenceInScale); 
+    // Calculate how much it has been scaled (either positive or negative)
+    //
+
+    };
+
+    // work out the difference between the div width or height (depending on which ever is bigger)
+
+    // scale the test colour div so that it is the same size/dimensions of the imported image 
+
+
 
     openNavButton.addEventListener('click', function () {
             document.getElementById("mySidenav").style.width = "350px";
@@ -105,7 +120,7 @@ $(document).ready(function () {
                     backgroundImageDivHeight = backgroundImage.offsetHeight;
                     console.log("width of background image Div = " + backgroundImageDivWidth);
                     console.log("height of background image Div = " + backgroundImageDivHeight);
-
+                    findImportedImageScaling();
                 };
 
                 img.onerror = function () {
@@ -132,8 +147,10 @@ $(document).ready(function () {
     //gets the width of the 'imageView' div, which holds the image
     function getImageViewWidth(imageView) {
         totalImageViewWidth = Number(imageView.offsetWidth);
+        totalImageViewHeight = Number(imageView.offsetHeight);
         console.log("Image View width = " + totalImageViewWidth);
-        return totalImageViewWidth;
+        console.log("Image View height = " + totalImageViewHeight);
+        // return totalImageViewWidth;
     }
     // getImageViewWidth(imageView); //doesn't need to be called here as it is also called in the measure line spaces function
 
