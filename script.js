@@ -20,7 +20,7 @@ $(document).ready(function () {
     const gridFullWidthButton = document.getElementById('gridFullWidthToggleButton');
     const testColourDiv = document.getElementById('testColourDiv');
     const container = document.getElementById('verticalLineDiv');
-    
+
 
     let scaleSliderValue = parseFloat(scaleSlider.val()); // Initialize scale value
     // console.log("scale slider value = " + scaleSliderValue);
@@ -53,57 +53,80 @@ $(document).ready(function () {
     let backgroundImageDivWidth = 0;
     let backgroundImageDivHeight = 0;
     let imageImportScaleUp = 0;
+    let imageProportion = 0;
+    let differenceInHeight = 0;
+    let differenceInWidth = 0;
+    let backgroundImgDivProportions = 0;
 
     container.style.display = "none";
 
     // deals with 
     gridFullWidthButton.addEventListener('click', function () {
+        // clears existing scale each time the function is called
+        // testColourDiv.style.height = 10 + "%";
+        // testColourDiv.style.width = 10 + "%"
+        // toggles the button
         gridFullContainerWidth = !gridFullContainerWidth;
         gridFullWidthButton.textContent = gridFullContainerWidth ? "Image Only Grid" : "Full Grid";
+        // hides or reveals the div
         if (testDivVisible == true) {
-        testColourDiv.style.display = "none";
-        testDivVisible = false;
-        console.log("test Div Visible = " + testDivVisible);
+            testColourDiv.style.display = "none";
+            testDivVisible = false;
+            console.log("test Div Visible = " + testDivVisible);
         } else {
             testColourDiv.style.display = "block";
             testDivVisible = true;
             console.log("test Div Visible = " + testDivVisible);
             // sets size of test div
-
-            // currently only works if image is taller than it is wide... 
-            testColourDiv.style.width = (imageImportScaleUp*imgWidth) + "px";
-            // testColourDiv.style.width = imgWidth + "px";
-            console.log("test colour div width = " + testColourDiv.style.width);
-            
-            testColourDiv.style.height = (imageImportScaleUp*imgHeight) + "px";
-            // testColourDiv.style.height = imgHeight + "px";
-            console.log("test colour div height = " +  testColourDiv.style.height);
+            setTestDivSize();
+            // needs a listener to check for image size if the screen is re-sized e.g IF (imageViewDiv.width < imageViewDiv.height )
         }
-        //make container = the space taken up by the uploaded image IF an image is uploaded. 
-
     });
-    
-    // as the imported image is scaled to fill the div 100%...
-    // take the uploaded size of the image, then it's full screen height or width (whichever is bigger)
-    function findImportedImageScaling () {
-         
-    let differenceInScale = totalImageViewHeight - imgHeight;
-    console.log("difference in height of the imported img to the space it takes in the div = " + differenceInScale); 
-    // Calculate how much it has been scaled (either positive or negative)
-    imageImportScaleUp = totalImageViewHeight/imgHeight;
-    console.log ("Image View div height / actual image height = " + imageImportScaleUp);  
-    
+
+    function setTestDivSize () {
+        if (backgroundImgDivProportions < imageProportion) {
+            // testColourDiv.style.height = imgHeight+differenceInHeight + "px";
+            testColourDiv.style.height = 100 + "%";
+            testColourDiv.style.width = 300 + "px";
+        }else {
+            testColourDiv.style.width = 100 + "%";
+            testColourDiv.style.height = 300 + "px";
+            }
     };
-    // work out the difference between the div width or height (depending on which ever is bigger)
+
+    // as the imported image is scaled to fill the div 100%...
+    function findImportedImageScalingPx() {
+        // Calculate how much it has been scaled (either positive or negative)  
+        imageImportScaleUp = totalImageViewHeight / imgHeight;
+        console.log("Diff in scale between imported image and div (div height/actual image height) = " + Math.round(imageImportScaleUp * 1000) / 1000);
+        // get height to width proportion 
+        imageProportion = imgHeight / imgWidth;
+        console.log("image proportion (height to width) = " + Math.round(imageProportion*1000) /1000);
+        if (imageProportion == 1) {
+            console.log("woo! this one's a square!");
+        }
+    };
+
+    // gets the proportions of the imgDiv
+    function backgroundImgDivProportionFunc () {
+        backgroundImageDivHeight = backgroundImage.offsetHeight;
+        backgroundImageDivWidth = backgroundImage.offsetWidth;
+        backgroundImgDivProportions = backgroundImageDivHeight / backgroundImageDivWidth;
+        console.log("background Img Div Proportions (height/width) = " + Math.round(backgroundImgDivProportions*1000)/1000);
+    };
+
     // scale the test colour div so that it is the same size/dimensions of the imported image 
 
+    // code for the side nav bar 
     openNavButton.addEventListener('click', function () {
-            document.getElementById("mySidenav").style.width = "350px";
-      });
-      
+        document.getElementById("mySidenav").style.width = "350px";
+    });
+
     closeNavButton.addEventListener('click', function () {
         document.getElementById("mySidenav").style.width = "0px";
     });
+
+    // get the size of the imported image
 
     function getSize() {
         $("#inputFile").change(function (e) {
@@ -119,12 +142,14 @@ $(document).ready(function () {
                     // logs out the size of the imported im in px
                     console.log("raw imported Width of img (imgWidth) in px = " + imgWidth);
                     console.log("raw imported Height of img (imgHeight) in px = " + imgHeight);
-                    
+
                     backgroundImageDivWidth = backgroundImage.offsetWidth;
                     backgroundImageDivHeight = backgroundImage.offsetHeight;
                     console.log("width of background image Div = " + backgroundImageDivWidth);
                     console.log("height of background image Div = " + backgroundImageDivHeight);
-                    findImportedImageScaling();
+                    backgroundImgDivProportionFunc();
+                    findImportedImageScalingPx();
+
                 };
 
                 img.onerror = function () {
@@ -132,21 +157,20 @@ $(document).ready(function () {
                 };
 
                 // Log the name of the uploaded file
-                console.log("Name of the uploaded image: " + file.name);
+                // console.log("Name of the uploaded image: " + file.name);
 
                 img.src = URL.createObjectURL(file);
                 imgLoaded = true;
-                console.log("image loaded = " + imgLoaded);
+                // console.log("image loaded = " + imgLoaded);
             }
         });
     };
-
     getSize();
 
+    // extra possible functions:
     //button to set the grid lines to the size of the image rather than the container... 
     //be able to move the image up/sideways with sliders 
     //save image/location/scaling info in local data
-    //
 
     //gets the width of the 'imageView' div, which holds the image
     function getImageViewWidth(imageView) {
@@ -154,7 +178,7 @@ $(document).ready(function () {
         totalImageViewHeight = Number(imageView.offsetHeight);
         console.log("Image View width = " + totalImageViewWidth);
         console.log("Image View height = " + totalImageViewHeight);
-        // return totalImageViewWidth;
+
     }
     // getImageViewWidth(imageView); //doesn't need to be called here as it is also called in the measure line spaces function
 
@@ -186,10 +210,9 @@ $(document).ready(function () {
         console.log("current scale = " + scale);
         scaleSliderValue = scale;
         updateBackgroundScale(scale);
-
     });
-    
 
+    //code for the course and fine size scale buttons 
     courseSizeUpButton.addEventListener('click', function () {
         if (scale < 2) {
             scale += 0.005;
@@ -199,22 +222,22 @@ $(document).ready(function () {
             //needs to update the scale slider value
             //needs to set a max of 2 for scale and a min of 0.1
             updateBackgroundScale(scale);
-            
-            } else {
-                console.log("max scale reached");
-            }
+
+        } else {
+            console.log("max scale reached");
+        }
     });
 
     fineSizeUpButton.addEventListener('click', function () {
         if (scale < 2) {
-        scale += 0.0005;
-        // scaleSliderValue = scale +=0.05;
-        scaleSliderValue = Math.min(scaleSliderValue + 0.0005, 2); // Ensure scale doesn't exceed max value
-        scaleSlider.val(scaleSliderValue);
-        //needs to update the scale slider value
-        //needs to set a max of 2 for scale and a min of 0.1
-        updateBackgroundScale(scale);
-        
+            scale += 0.0005;
+            // scaleSliderValue = scale +=0.05;
+            scaleSliderValue = Math.min(scaleSliderValue + 0.0005, 2); // Ensure scale doesn't exceed max value
+            scaleSlider.val(scaleSliderValue);
+            //needs to update the scale slider value
+            //needs to set a max of 2 for scale and a min of 0.1
+            updateBackgroundScale(scale);
+
         } else {
             console.log("max scale reached");
         }
@@ -227,22 +250,23 @@ $(document).ready(function () {
             scaleSliderValue = Math.min(scaleSliderValue - 0.005, 2); // Ensure scale doesn't exceed max value
             scaleSlider.val(scaleSliderValue);
             updateBackgroundScale(scale);
-            
-            } else {
-                console.log("max scale reached");
-            }
-    });
 
+        } else {
+            console.log("max scale reached");
+        }
+    });
+    
+   
     fineSizeDownButton.addEventListener('click', function () {
         if (scale > 0.1) {
-        scale -= 0.0005;
-        scaleSliderValue = Math.min(scaleSliderValue - 0.0005, 2); // Ensure scale doesn't exceed max value
-        scaleSlider.val(scaleSliderValue);
-        updateBackgroundScale(scale);
-        
-    } else {
-        console.log("min scale reached");
-    }
+            scale -= 0.0005;
+            scaleSliderValue = Math.min(scaleSliderValue - 0.0005, 2); // Ensure scale doesn't exceed max value
+            scaleSlider.val(scaleSliderValue);
+            updateBackgroundScale(scale);
+
+        } else {
+            console.log("min scale reached");
+        }
     });
 
     // updates the grid lines when the slider is changed
@@ -260,6 +284,7 @@ $(document).ready(function () {
         if (!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); };
     });
 
+  
     imageView.addEventListener("mousedown", startDragging);
     imageView.addEventListener("mousemove", drag);
     imageView.addEventListener("mouseup", endDragging);
@@ -355,7 +380,7 @@ $(document).ready(function () {
     }
     updateGrid(container);
 
-
+    // measures the space between lines
     function measureLineSpace(container, vertLineNum) {
         getImageViewWidth(imageView); // updates the totalImageView width global variable. 
         spacingPixels = totalImageViewWidth / (vertLineNum - 1) // have to -1 to get the correct scale e.g. make all the division cubes
@@ -364,6 +389,9 @@ $(document).ready(function () {
 
     //resizes the grid if the window size is changed
     window.addEventListener('resize', function () {
+        
+        backgroundImgDivProportionFunc();
+        setTestDivSize();
         updateGrid(container);
     });
 
@@ -425,9 +453,8 @@ $(document).ready(function () {
         };
     });
 
+    // toggles the vertical lines
     verticalGridToggleButton.addEventListener("click", function () {
-
-        // showVertLines = true;
         verticalGridToggleButton.textContent = showVertLines ? "Hide Vert Grid" : "Show Vert Grid"
 
         if (showVertLines == true) {
@@ -448,14 +475,9 @@ $(document).ready(function () {
             console.log("verticalGridToggleButton has been clicked! woo!");
             showVertLines = true;
         }
-
-        // Loop through each element and set its width to 10px
-        // for (var i = 0; i < elements.length; i++) {
-        // elements[i].style.width = "4px";
-        // }
-
     });
 
+    // if the re-center button is pressed
     function clearManipulations() {
         backgroundImage.style.backgroundPosition = "";
         backgroundImage.style.transform = "";
@@ -466,6 +488,7 @@ $(document).ready(function () {
         console.log("JavaScript manipulations cleared.");
     }
 
+    // button to re-center the image if it has been manually moved off center (sometime it might be de-centralised if the screen has changed shape)
     reCenterToggleButton.addEventListener("click", function () {
         currentScaleFactor = scaleFactor;
 
@@ -486,7 +509,6 @@ $(document).ready(function () {
     });
 
     // functions for the camera
-
     async function startCamera(facingMode) {
         paused = false;
         pauseButton.textContent = "Pause";
