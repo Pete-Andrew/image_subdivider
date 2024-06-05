@@ -53,7 +53,8 @@ $(document).ready(function () {
     let backgroundImageDivWidth = 0;
     let backgroundImageDivHeight = 0;
     let imageImportScaleUp = 0;
-    let imageProportion = 0;
+    let imageProportionHTW = 0;
+    let imageProportionWTH = 0;
     let differenceInHeight = 0;
     let differenceInWidth = 0;
     let backgroundImgDivProportions = 0;
@@ -84,13 +85,13 @@ $(document).ready(function () {
     });
 
     function setTestDivSize () {
-        if (backgroundImgDivProportions < imageProportion) {
+        if (backgroundImgDivProportions < imageProportionHTW) {
             // testColourDiv.style.height = imgHeight+differenceInHeight + "px";
             testColourDiv.style.height = 100 + "%";
-            testColourDiv.style.width = 300 + "px";
+            testColourDiv.style.width = backgroundImageDivHeight*imageProportionWTH + "px";
         }else {
             testColourDiv.style.width = 100 + "%";
-            testColourDiv.style.height = 300 + "px";
+            testColourDiv.style.height = backgroundImageDivWidth*imageProportionHTW + "px";
             }
     };
 
@@ -100,9 +101,11 @@ $(document).ready(function () {
         imageImportScaleUp = totalImageViewHeight / imgHeight;
         console.log("Diff in scale between imported image and div (div height/actual image height) = " + Math.round(imageImportScaleUp * 1000) / 1000);
         // get height to width proportion 
-        imageProportion = imgHeight / imgWidth;
-        console.log("image proportion (height to width) = " + Math.round(imageProportion*1000) /1000);
-        if (imageProportion == 1) {
+        imageProportionHTW = imgHeight / imgWidth;
+        imageProportionWTH = imgWidth / imgHeight;
+        console.log("image proportion (height to width) = " + Math.round(imageProportionHTW*1000) /1000);
+        console.log("image proportion (width to height) = " + Math.round(imageProportionWTH*1000) /1000);
+        if (imageProportionHTW == 1) {
             console.log("woo! this one's a square!");
         }
     };
