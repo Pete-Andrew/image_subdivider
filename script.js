@@ -49,7 +49,7 @@ $(document).ready(function () {
     let cameraOn = false;
     let gridFullContainerWidth = true;
     let imgLoaded = false;
-    let testDivVisible = true;
+    let testDivVisible = false;
     let backgroundImageDivWidth = 0;
     let backgroundImageDivHeight = 0;
     let imageImportScaleUp = 0;
@@ -198,7 +198,7 @@ $(document).ready(function () {
         }
     });
 
-    // changes the size of the image
+    // changes the size of the image, gets called by the scale slider function and the update scale buttons
     function updateBackgroundScale(scale) {
         scaleFactor = scale;
         let translateX = offsetX - (backgroundImage.offsetWidth / 2);
