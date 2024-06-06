@@ -204,15 +204,28 @@ $(document).ready(function () {
         let translateX = offsetX - (backgroundImage.offsetWidth / 2);
         let translateY = offsetY - (backgroundImage.offsetHeight / 2);
         backgroundImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-        console.log("scale = " + scale);
+        console.log("proportion of full size = " + scale);
+        
+        if (backgroundImgDivProportions < imageProportionHTW) {
+        testColourDiv.style.height = (backgroundImage.offsetHeight*scale) + "px";
+        testColourDiv.style.width = (backgroundImageDivHeight*imageProportionWTH)*scale + "px";
+    } else {
+        testColourDiv.style.height = (backgroundImageDivWidth*imageProportionHTW)*scale + "px";
+        testColourDiv.style.width = (backgroundImage.offsetWidth*scale) + "px";
+        console.log("wicca wicca woo");
+    }
+        // need to update the scale of the test div
+
+
     }
 
     // listens for the scale slider 
     $("#scaleSlider").on("input", function () {
         scale = parseFloat($(this).val());  //parseFloat enables the fine size buttons to work if the image has been re-scaled with the slider
-        console.log("current scale = " + scale);
+        // console.log("current scale = " + scale);
         scaleSliderValue = scale;
         updateBackgroundScale(scale);
+
     });
 
     //code for the course and fine size scale buttons 
