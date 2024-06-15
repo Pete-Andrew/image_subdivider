@@ -131,7 +131,7 @@ background-color: #F5F5F5;
     position: absolute;
     width: 20%;
     height: 20%;
-    background-color: #007bff;
+    background-color: #6ca9eb;
     z-index: 3;
 
     /* Center the div using this trick! */
@@ -143,7 +143,7 @@ background-color: #F5F5F5;
 
 /* Nav Bar */
 .sidenav {
-    height: 55%;
+    height: 100%;
     width: 0;
     position: fixed;
     z-index: 1;

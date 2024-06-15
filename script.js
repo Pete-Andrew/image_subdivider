@@ -19,7 +19,7 @@ $(document).ready(function () {
     const scaleSlider = $('#scaleSlider');
     const gridFullWidthButton = document.getElementById('gridFullWidthToggleButton');
     const testColourDiv = document.getElementById('testColourDiv');
-    const container = document.getElementById('verticalLineDiv');
+    let container = document.getElementById('verticalLineDiv');
 
 
     let scaleSliderValue = parseFloat(scaleSlider.val()); // Initialize scale value
@@ -58,6 +58,7 @@ $(document).ready(function () {
     let differenceInHeight = 0;
     let differenceInWidth = 0;
     let backgroundImgDivProportions = 0;
+    
 
     container.style.display = "none";
 
@@ -72,12 +73,25 @@ $(document).ready(function () {
         // hides or reveals the div
         if (testDivVisible == true) {
             testColourDiv.style.display = "none";
+            // clears the testDiv and re-assigns the 'container' variable to the 'verticalLineDiv' ID
+            container.innerHTML = ''; 
+            container = document.getElementById('verticalLineDiv');
+            
             testDivVisible = false;
             console.log("test Div Visible = " + testDivVisible);
         } else {
             testColourDiv.style.display = "block";
             testDivVisible = true;
             console.log("test Div Visible = " + testDivVisible);
+            
+            
+            // Clear existing lines
+            container.innerHTML = ''; 
+            // changes the container to be the size of the image
+            container = testColourDiv;
+            
+            // need to constrain the spacing so that the grid is square....
+            
             // sets size of test div
             setTestDivSize();
             // needs a listener to check for image size if the screen is re-sized e.g IF (imageViewDiv.width < imageViewDiv.height )
@@ -172,7 +186,6 @@ $(document).ready(function () {
 
     // extra possible functions:
     //button to set the grid lines to the size of the image rather than the container... 
-    //be able to move the image up/sideways with sliders 
     //save image/location/scaling info in local data
 
     //gets the width of the 'imageView' div, which holds the image
@@ -406,8 +419,8 @@ $(document).ready(function () {
     //resizes the grid if the window size is changed
     window.addEventListener('resize', function () {
         
-        backgroundImgDivProportionFunc();
-        setTestDivSize();
+        backgroundImgDivProportionFunc(); // gets the proportions of the image div
+        setTestDivSize(); //sets the size of the test div
         updateGrid(container);
     });
 
