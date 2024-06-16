@@ -18,10 +18,13 @@ $(document).ready(function () {
     const closeNavButton = document.getElementById('closeNavButton');
     const scaleSlider = $('#scaleSlider');
     const gridFullWidthButton = document.getElementById('gridFullWidthToggleButton');
+    const lineColourButton = document.getElementById('lineColourButton');
     const testColourDiv = document.getElementById('testColourDiv');
+    const lineWeightButton = document.getElementById('lineWeightButton');
+
     let container = document.getElementById('verticalLineDiv');
-
-
+    let grid = document.getElementById("verticalLineDiv");
+    
     let scaleSliderValue = parseFloat(scaleSlider.val()); // Initialize scale value
     // console.log("scale slider value = " + scaleSliderValue);
     let lineCount = 0; // Default number of horizontal lines
@@ -35,34 +38,57 @@ $(document).ready(function () {
     let scale = 1;
     let scaleFactor = 1;
     let currentScaleFactor = 1;
-    let isDragging = false;
     let initialX;
     let initialY;
     let offsetX = 0;
     let offsetY = 0;
-    let manualMoveEnabled = false;
-    let showGrid = false;
-    let showHzLines = false;
-    let showVertLines = true;
-    let currentFacingMode = 'user'; // Default to front camera
-    let paused = false;
-    let cameraOn = false;
-    let gridFullContainerWidth = true;
-    let imgLoaded = false;
-    let testDivVisible = false;
     let backgroundImageDivWidth = 0;
     let backgroundImageDivHeight = 0;
     let imageImportScaleUp = 0;
     let imageProportionHTW = 0;
     let imageProportionWTH = 0;
     let backgroundImgDivProportions = 0;
-    
     let testColourDivWidth = 0;
     let testColourDivHeight = 0; 
-
+    
+    let isDragging = false;
+    let manualMoveEnabled = false;
+    let showGrid = false;
+    let showHzLines = false;
+    let showVertLines = true;
+    let paused = false;
+    let cameraOn = false;
+    let gridFullContainerWidth = true;
+    let imgLoaded = false;
+    let testDivVisible = false;
+    let lineColourWhite = false; 
+    let lineWeight = 1;
+    
+    let currentFacingMode = 'user'; // Default to front camera
+    
     container.style.display = "none";
 
-    // deals with 
+
+    lineColourButton.addEventListener('click', function () {
+        console.log("line colour has been changed");
+
+        if (lineColourWhite == false) {
+            lineColourWhite = true;
+
+            var styleSheet = document.styleSheets[0];
+            styleSheet.insertRule('.line { background-color: white !important; }', styleSheet.cssRules.length);
+            styleSheet.insertRule('.horizontalLine { background-color: white !important; }', styleSheet.cssRules.length);
+
+        } else {
+            lineColourWhite = false;
+            var styleSheet = document.styleSheets[0]; // can this be declared as a global variable?
+            styleSheet.insertRule('.line { background-color: black !important; }', styleSheet.cssRules.length);
+            styleSheet.insertRule('.horizontalLine { background-color: black !important; }', styleSheet.cssRules.length);
+        }
+    });
+
+
+
     gridFullWidthButton.addEventListener('click', function () {
         // clears existing scale each time the function is called
         // testColourDiv.style.height = 10 + "%";
@@ -222,7 +248,6 @@ $(document).ready(function () {
     inputFile.addEventListener("change", function () {
         if (this.files.length > 0) {
             uploadImage(this.files[0]);
-
         }
     });
 
@@ -233,6 +258,8 @@ $(document).ready(function () {
         let translateY = offsetY - (backgroundImage.offsetHeight / 2);
         backgroundImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
         console.log("proportion of full size = " + scale);
+        
+        // measureLineSpace(container, vertLineNum);
 
         if (backgroundImgDivProportions < imageProportionHTW) {
             testColourDiv.style.height = (backgroundImage.offsetHeight * scale) + "px";
@@ -311,6 +338,7 @@ $(document).ready(function () {
     });
 
     // updates the grid lines when the slider is changed
+    // need to reset slider when swapping between 'image only' and full screen
     $("#gridLineScaleSlider").on("input", function () {
         vertLineNum = $(this).val();
         lineCount = vertLineNum * 3; // *3 makes sure there are always enough horizontal grid lines (unless the image is ridiculously distorted)
@@ -318,9 +346,8 @@ $(document).ready(function () {
         console.log("Container width = " + container.offsetWidth + " px");
         container.innerHTML = ''; // Clear existing lines    
 
-        // if else for if the 'image only grid' button is ticked
+        // if else for if the 'image only grid' button is ticked, this makes sure the grid lines maintain squares
         if (testDivVisible == false) {
-
         spacingPixels = totalImageViewWidth / (vertLineNum - 1); // have to -1 to get the correct scale e.g. make all the division cubes
         console.log("line spacing in PX = " + spacingPixels);
     } else {
@@ -360,6 +387,7 @@ $(document).ready(function () {
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
         dropArea.addEventListener(eventName, preventDefaults, false)
     });
+
 
     function preventDefaults(e) {
         e.preventDefault()
@@ -409,7 +437,13 @@ $(document).ready(function () {
     gridToggleButton.addEventListener("click", function () {
         showGrid = !showGrid;
         gridToggleButton.textContent = showGrid ? "Hide Grid" : "Show Grid";
-        const grid = document.getElementById("verticalLineDiv");
+        
+        // checks to see if the grid is 'image only'
+        if (testDivVisible == false) {
+        grid = document.getElementById("verticalLineDiv");       
+        } else {
+        grid = document.getElementById("testColourDiv");
+        }
 
         if (grid.style.display == "block") {
             grid.style.display = "none";
@@ -450,7 +484,9 @@ $(document).ready(function () {
 
         backgroundImgDivProportionFunc(); // gets the proportions of the image div
         setTestDivSize(); //sets the size of the test div
+        
         updateGrid(container);
+       
     });
 
     // functions for creating the lines
