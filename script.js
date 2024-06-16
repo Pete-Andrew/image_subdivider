@@ -55,10 +55,10 @@ $(document).ready(function () {
     let imageImportScaleUp = 0;
     let imageProportionHTW = 0;
     let imageProportionWTH = 0;
-    let differenceInHeight = 0;
-    let differenceInWidth = 0;
     let backgroundImgDivProportions = 0;
     
+    let testColourDivWidth = 0;
+    let testColourDivHeight = 0; 
 
     container.style.display = "none";
 
@@ -74,39 +74,53 @@ $(document).ready(function () {
         if (testDivVisible == true) {
             testColourDiv.style.display = "none";
             // clears the testDiv and re-assigns the 'container' variable to the 'verticalLineDiv' ID
-            container.innerHTML = ''; 
+            container.innerHTML = '';
             container = document.getElementById('verticalLineDiv');
-            
+
             testDivVisible = false;
             console.log("test Div Visible = " + testDivVisible);
         } else {
             testColourDiv.style.display = "block";
             testDivVisible = true;
             console.log("test Div Visible = " + testDivVisible);
-            
-            
+
+
             // Clear existing lines
-            container.innerHTML = ''; 
+            container.innerHTML = '';
             // changes the container to be the size of the image
             container = testColourDiv;
-            
+
             // need to constrain the spacing so that the grid is square....
-            
+
+
             // sets size of test div
             setTestDivSize();
             // needs a listener to check for image size if the screen is re-sized e.g IF (imageViewDiv.width < imageViewDiv.height )
         }
     });
 
-    function setTestDivSize () {
+    function setTestDivSize() {
         if (backgroundImgDivProportions < imageProportionHTW) {
-            // testColourDiv.style.height = imgHeight+differenceInHeight + "px";
+            // height > width
             testColourDiv.style.height = 100 + "%";
-            testColourDiv.style.width = backgroundImageDivHeight*imageProportionWTH + "px";
-        }else {
+            testColourDiv.style.width = backgroundImageDivHeight * imageProportionWTH + "px";
+            // value will be the same as the div height as the image will fill 100% of the div
+            
+            testColourDivHeight = backgroundImageDivHeight;
+            testColourDivWidth = Math.round(backgroundImageDivHeight * imageProportionWTH * 1000)/1000;
+            console.log("image is " + testColourDivHeight + " px tall");
+            console.log("image is " + testColourDivWidth + " px wide" )
+        } else {
+            // width > height
             testColourDiv.style.width = 100 + "%";
-            testColourDiv.style.height = backgroundImageDivWidth*imageProportionHTW + "px";
-            }
+            testColourDiv.style.height = backgroundImageDivWidth * imageProportionHTW + "px";
+            // value will be the same as the div width as the image will fill 100% of the div
+            
+            testColourDivWidth = backgroundImageDivWidth;
+            testColourDivHeight = Math.round(backgroundImageDivWidth * imageProportionHTW * 1000)/1000;
+            console.log("image is " + testColourDivWidth + " px wide");
+            console.log("image is " + testColourDivHeight + " px tall");
+        }
     };
 
     // as the imported image is scaled to fill the div 100%...
@@ -117,22 +131,22 @@ $(document).ready(function () {
         // get height to width proportion 
         imageProportionHTW = imgHeight / imgWidth;
         imageProportionWTH = imgWidth / imgHeight;
-        console.log("image proportion (height to width) = " + Math.round(imageProportionHTW*1000) /1000);
-        console.log("image proportion (width to height) = " + Math.round(imageProportionWTH*1000) /1000);
+        console.log("image proportion (height to width) = " + Math.round(imageProportionHTW * 1000) / 1000);
+        console.log("image proportion (width to height) = " + Math.round(imageProportionWTH * 1000) / 1000);
+        
+
         if (imageProportionHTW == 1) {
             console.log("woo! this one's a square!");
         }
     };
 
     // gets the proportions of the imgDiv
-    function backgroundImgDivProportionFunc () {
+    function backgroundImgDivProportionFunc() {
         backgroundImageDivHeight = backgroundImage.offsetHeight;
         backgroundImageDivWidth = backgroundImage.offsetWidth;
         backgroundImgDivProportions = backgroundImageDivHeight / backgroundImageDivWidth;
-        console.log("background Img Div Proportions (height/width) = " + Math.round(backgroundImgDivProportions*1000)/1000);
+        console.log("background Img Div Proportions (height/width) = " + Math.round(backgroundImgDivProportions * 1000) / 1000);
     };
-
-    // scale the test colour div so that it is the same size/dimensions of the imported image 
 
     // code for the side nav bar 
     openNavButton.addEventListener('click', function () {
@@ -218,18 +232,15 @@ $(document).ready(function () {
         let translateY = offsetY - (backgroundImage.offsetHeight / 2);
         backgroundImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
         console.log("proportion of full size = " + scale);
-        
+
         if (backgroundImgDivProportions < imageProportionHTW) {
-        testColourDiv.style.height = (backgroundImage.offsetHeight*scale) + "px";
-        testColourDiv.style.width = (backgroundImageDivHeight*imageProportionWTH)*scale + "px";
-    } else {
-        testColourDiv.style.height = (backgroundImageDivWidth*imageProportionHTW)*scale + "px";
-        testColourDiv.style.width = (backgroundImage.offsetWidth*scale) + "px";
-        console.log("wicca wicca woo");
-    }
-        // need to update the scale of the test div
-
-
+            testColourDiv.style.height = (backgroundImage.offsetHeight * scale) + "px";
+            testColourDiv.style.width = (backgroundImageDivHeight * imageProportionWTH) * scale + "px";
+        } else {
+            testColourDiv.style.height = (backgroundImageDivWidth * imageProportionHTW) * scale + "px";
+            testColourDiv.style.width = (backgroundImage.offsetWidth * scale) + "px";
+            console.log("wicca wicca woo");
+        }
     }
 
     // listens for the scale slider 
@@ -284,8 +295,8 @@ $(document).ready(function () {
             console.log("max scale reached");
         }
     });
-    
-   
+
+
     fineSizeDownButton.addEventListener('click', function () {
         if (scale > 0.1) {
             scale -= 0.0005;
@@ -313,7 +324,7 @@ $(document).ready(function () {
         if (!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); };
     });
 
-  
+
     imageView.addEventListener("mousedown", startDragging);
     imageView.addEventListener("mousemove", drag);
     imageView.addEventListener("mouseup", endDragging);
@@ -411,14 +422,23 @@ $(document).ready(function () {
 
     // measures the space between lines
     function measureLineSpace(container, vertLineNum) {
+        
+        // if else statement if 'image only grid' is being used....
+        if (testDivVisible == false) {
         getImageViewWidth(imageView); // updates the totalImageView width global variable. 
-        spacingPixels = totalImageViewWidth / (vertLineNum - 1) // have to -1 to get the correct scale e.g. make all the division cubes
+
+        spacingPixels = totalImageViewWidth / (vertLineNum - 1) // have to -1 to get the correct scale e.g. make all the division cubes / square
+        } else {
+        console.log("test div is visible");
+        }
+        
+
         if (!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); } //calls this function with updated spacing pixels IF showHzLines bool is true. 
     }
 
     //resizes the grid if the window size is changed
     window.addEventListener('resize', function () {
-        
+
         backgroundImgDivProportionFunc(); // gets the proportions of the image div
         setTestDivSize(); //sets the size of the test div
         updateGrid(container);
