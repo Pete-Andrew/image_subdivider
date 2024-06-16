@@ -131,7 +131,7 @@ background-color: #F5F5F5;
     position: absolute;
     width: 20%;
     height: 20%;
-    background-color: #6ca9eb;
+    /* background-color: #6ca9eb; */
     z-index: 3;
 
     /* Center the div using this trick! */

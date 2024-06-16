@@ -109,7 +109,7 @@ $(document).ready(function () {
             testColourDivHeight = backgroundImageDivHeight;
             testColourDivWidth = Math.round(backgroundImageDivHeight * imageProportionWTH * 1000)/1000;
             console.log("image is " + testColourDivHeight + " px tall");
-            console.log("image is " + testColourDivWidth + " px wide" )
+            console.log("image is " + testColourDivWidth + " px wide" );
         } else {
             // width > height
             testColourDiv.style.width = 100 + "%";
@@ -211,6 +211,7 @@ $(document).ready(function () {
 
     }
     // getImageViewWidth(imageView); //doesn't need to be called here as it is also called in the measure line spaces function
+
 
     // uploads the image as either a drag and drop or an open file
     function uploadImage(file) {
@@ -317,9 +318,15 @@ $(document).ready(function () {
         console.log("Container width = " + container.offsetWidth + " px");
         container.innerHTML = ''; // Clear existing lines    
 
-        spacingPixels = totalImageViewWidth / (vertLineNum - 1) // have to -1 to get the correct scale e.g. make all the division cubes
-        console.log("line spacing in PX = " + spacingPixels);
+        // if else for if the 'image only grid' button is ticked
+        if (testDivVisible == false) {
 
+        spacingPixels = totalImageViewWidth / (vertLineNum - 1); // have to -1 to get the correct scale e.g. make all the division cubes
+        console.log("line spacing in PX = " + spacingPixels);
+    } else {
+        spacingPixels = testColourDivWidth / (vertLineNum - 1);
+        console.log("line spacing in PX = " + spacingPixels);
+    }
         createParallelLines(container, vertLineNum); // Recreate lines
         if (!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); };
     });
@@ -422,16 +429,18 @@ $(document).ready(function () {
 
     // measures the space between lines
     function measureLineSpace(container, vertLineNum) {
-        
+
         // if else statement if 'image only grid' is being used....
         if (testDivVisible == false) {
-        getImageViewWidth(imageView); // updates the totalImageView width global variable. 
+            getImageViewWidth(imageView); // updates the totalImageView width global variable. 
+            spacingPixels = totalImageViewWidth / (vertLineNum - 1); // have to -1 to get the correct scale e.g. make all the division cubes / square
 
-        spacingPixels = totalImageViewWidth / (vertLineNum - 1) // have to -1 to get the correct scale e.g. make all the division cubes / square
         } else {
-        console.log("test div is visible");
+            // container = testColourDiv;
+            spacingPixels = testColourDivWidth / (vertLineNum - 1);
+            console.log("test div is visible");
         }
-        
+
 
         if (!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); } //calls this function with updated spacing pixels IF showHzLines bool is true. 
     }
