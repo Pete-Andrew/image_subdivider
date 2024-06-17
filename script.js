@@ -54,7 +54,7 @@ $(document).ready(function () {
     let isDragging = false;
     let manualMoveEnabled = false;
     let showGrid = false;
-    let showHzLines = false;
+    let showHzLines = true;
     let showVertLines = true;
     let paused = false;
     let cameraOn = false;
@@ -68,7 +68,7 @@ $(document).ready(function () {
     
     container.style.display = "none";
 
-
+// changes the line colour from black to white by inserting rules into the CSS
     lineColourButton.addEventListener('click', function () {
         console.log("line colour has been changed");
 
@@ -88,7 +88,7 @@ $(document).ready(function () {
     });
 
 
-
+    // switches the grid between 'image only' and full div width 
     gridFullWidthButton.addEventListener('click', function () {
         // clears existing scale each time the function is called
         // testColourDiv.style.height = 10 + "%";
@@ -104,23 +104,32 @@ $(document).ready(function () {
             container = document.getElementById('verticalLineDiv');
 
             testDivVisible = false;
-            console.log("test Div Visible = " + testDivVisible);
-        } else {
+            console.log("test Div Visible = " + testDivVisible);       
+
+            createParallelLines(container, vertLineNum);
+            spacingPixels = totalImageViewWidth / (vertLineNum - 1); // have to -1 to get the correct scale e.g. make all the division cubes
+            
+            if (showHzLines == true) {
+            createHzParallelLines(container, vertLineNum, spacingPixels); 
+        }
+
+        } else if (testDivVisible == false) {
             testColourDiv.style.display = "block";
             testDivVisible = true;
             console.log("test Div Visible = " + testDivVisible);
-
-
             // Clear existing lines
             container.innerHTML = '';
             // changes the container to be the size of the image
             container = testColourDiv;
-
-            // need to constrain the spacing so that the grid is square....
-
-
             // sets size of test div
             setTestDivSize();
+            lineCount = vertLineNum * 3; // need to add this *3 or there are not enough hz lines
+            createParallelLines(container, vertLineNum);
+            spacingPixels = testColourDivWidth / (vertLineNum - 1);
+            
+            if (showHzLines == true) {
+            createHzParallelLines(container, lineCount, spacingPixels); 
+            }
             // needs a listener to check for image size if the screen is re-sized e.g IF (imageViewDiv.width < imageViewDiv.height )
         }
     });
@@ -259,7 +268,7 @@ $(document).ready(function () {
         backgroundImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
         console.log("proportion of full size = " + scale);
         
-        // measureLineSpace(container, vertLineNum);
+    // measureLineSpace(container, vertLineNum);
 
         if (backgroundImgDivProportions < imageProportionHTW) {
             testColourDiv.style.height = (backgroundImage.offsetHeight * scale) + "px";
@@ -355,7 +364,7 @@ $(document).ready(function () {
         console.log("line spacing in PX = " + spacingPixels);
     }
         createParallelLines(container, vertLineNum); // Recreate lines
-        if (!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); };
+        if (showHzLines == true) { createHzParallelLines(container, lineCount, spacingPixels); };
     });
 
 
@@ -452,13 +461,14 @@ $(document).ready(function () {
         };
     });
 
-    // this function redraws the lines when the grid is re-sized
+    // this function re-draws the lines when the grid is re-sized
     function updateGrid(container) {
         container.innerHTML = ''; // Clear existing lines
-
         createParallelLines(container, vertLineNum); // Recreate lines
         measureLineSpace(container, vertLineNum)
+        console.log("updateGrid func called");
     }
+    // needs to be called on initialisation to make sure the line spacing is set correctly (?) 
     updateGrid(container);
 
     // measures the space between lines
@@ -475,8 +485,7 @@ $(document).ready(function () {
             console.log("test div is visible");
         }
 
-
-        if (!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); } //calls this function with updated spacing pixels IF showHzLines bool is true. 
+        if (showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); } //calls this function with updated spacing pixels IF showHzLines bool is true. 
     }
 
     //resizes the grid if the window size is changed
@@ -530,33 +539,37 @@ $(document).ready(function () {
         }
     }
 
-    //clear all lines and redraw only vertical lines. 
+    //hiding HZ lines causing issues when you change from 'image only' to full grid
+    //clear all lines and re-draw only vertical lines. 
     horizontalGridToggleButton.addEventListener("click", function () {
-
-        showHzLines = !showHzLines;
-        console.log("showHzLine = " + !showHzLines);
+        
+        console.log("showHzLine = " + showHzLines);
         horizontalGridToggleButton.textContent = !showHzLines ? "Hide Hz Grid" : "Show Hz Grid";
         // const grid = document.getElementById("verticalLineDiv");
-        if (showHzLines) {
+        if (showHzLines == true) {
             container.innerHTML = ''; // Clear existing lines
-            console.log("Hide Hz Grid Lines");
+            console.log("Hidden Hz Grid Lines");
+            showHzLines = false;
             createParallelLines(container, vertLineNum);
+
         } else {
-            console.log("Show Hz Grid Lines");
+            console.log("Un-hidden Hz Grid Lines");
+            showHzLines = true;
             createHzParallelLines(container, vertLineNum * 3, spacingPixels);
         };
     });
 
-    // toggles the vertical lines
+    // toggles the vertical lines on/off
     verticalGridToggleButton.addEventListener("click", function () {
-        verticalGridToggleButton.textContent = showVertLines ? "Hide Vert Grid" : "Show Vert Grid"
+        verticalGridToggleButton.textContent = !showVertLines? "Hide Vert Grid" : "Show Vert Grid"
 
         if (showVertLines == true) {
             container.innerHTML = '';
             var styleSheet = document.styleSheets[0];
             styleSheet.insertRule('.line { width: 0px !important; }', styleSheet.cssRules.length);
+            
             createParallelLines(container, vertLineNum); // Recreate lines
-            if (!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); };
+            if (showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); };
             console.log("hide vert grid lines has been clicked! woo!");
             showVertLines = !showVertLines;
             console.log(showVertLines);
@@ -578,19 +591,19 @@ $(document).ready(function () {
 
         offsetX = 0;
         offsetY = 0;
-
+        backgroundImage.style.backgroundPosition = "center center";
         console.log("JavaScript manipulations cleared.");
     }
 
     // button to re-center the image if it has been manually moved off center (sometime it might be de-centralised if the screen has changed shape)
     reCenterToggleButton.addEventListener("click", function () {
         currentScaleFactor = scaleFactor;
-
         clearManipulations();
 
-        backgroundImage.style.backgroundPosition = "center center";
+        // backgroundImage.style.backgroundPosition = "center center";
         console.log("Image re-centered.");
     });
+
 
     function reapplyScaleFactor() {
         let translateX = offsetX - (backgroundImage.offsetWidth / 2);
@@ -602,6 +615,10 @@ $(document).ready(function () {
         reapplyScaleFactor();
     });
 
+
+// <------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+
+    // Camera Lucida function NOT CURRENTLY IN USE: 
     // functions for the camera
     async function startCamera(facingMode) {
         paused = false;
