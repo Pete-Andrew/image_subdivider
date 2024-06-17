@@ -21,6 +21,12 @@ $(document).ready(function () {
     const lineColourButton = document.getElementById('lineColourButton');
     const testColourDiv = document.getElementById('testColourDiv');
     const lineWeightButton = document.getElementById('lineWeightButton');
+    
+    // variables that deal with line spacing
+    let containerHeight = imageView.clientHeight; // Get the container height
+    let centerOffset = containerHeight / 2; // Calculate the center position
+    // Calculate the initial offset for the first line to be at the center
+    let initialOffset = centerOffset;
 
     let container = document.getElementById('verticalLineDiv');
     let grid = document.getElementById("verticalLineDiv");
@@ -90,9 +96,6 @@ $(document).ready(function () {
 
     // switches the grid between 'image only' and full div width 
     gridFullWidthButton.addEventListener('click', function () {
-        // clears existing scale each time the function is called
-        // testColourDiv.style.height = 10 + "%";
-        // testColourDiv.style.width = 10 + "%"
         // toggles the button
         gridFullContainerWidth = !gridFullContainerWidth;
         gridFullWidthButton.textContent = gridFullContainerWidth ? "Image Only Grid" : "Full Grid";
@@ -123,7 +126,12 @@ $(document).ready(function () {
             container = testColourDiv;
             // sets size of test div
             setTestDivSize();
+            
+            
             lineCount = vertLineNum * 3; // need to add this *3 or there are not enough hz lines
+            // how to get rid of extra lines? 
+            // lineCount = vertLineNum * imageProportionHTW;
+
             createParallelLines(container, vertLineNum);
             spacingPixels = testColourDivWidth / (vertLineNum - 1);
             
@@ -168,7 +176,6 @@ $(document).ready(function () {
         imageProportionWTH = imgWidth / imgHeight;
         console.log("image proportion (height to width) = " + Math.round(imageProportionHTW * 1000) / 1000);
         console.log("image proportion (width to height) = " + Math.round(imageProportionWTH * 1000) / 1000);
-        
 
         if (imageProportionHTW == 1) {
             console.log("woo! this one's a square!");
@@ -367,7 +374,6 @@ $(document).ready(function () {
         if (showHzLines == true) { createHzParallelLines(container, lineCount, spacingPixels); };
     });
 
-
     imageView.addEventListener("mousedown", startDragging);
     imageView.addEventListener("mousemove", drag);
     imageView.addEventListener("mouseup", endDragging);
@@ -396,7 +402,6 @@ $(document).ready(function () {
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
         dropArea.addEventListener(eventName, preventDefaults, false)
     });
-
 
     function preventDefaults(e) {
         e.preventDefault()
@@ -523,10 +528,20 @@ $(document).ready(function () {
     }
 
     function createHzParallelLines(container, count, spacingPixels) {
-        const containerHeight = imageView.clientHeight; // Get the container height
-        const centerOffset = containerHeight / 2; // Calculate the center position
+        
+        if (testDivVisible == true) {
+        containerHeight = testColourDivHeight; // Get the container height
+        centerOffset = containerHeight / 2; // Calculate the center position
         // Calculate the initial offset for the first line to be at the center
-        const initialOffset = centerOffset;
+        initialOffset = centerOffset;
+        } else {
+        // this re-sets the code if test div is no longer visible
+        containerHeight = imageView.clientHeight; // Get the container height
+        centerOffset = containerHeight / 2; // Calculate the center position
+        // Calculate the initial offset for the first line to be at the center
+        initialOffset = centerOffset;
+        }
+
         // Create the central line
         createHorizontalLine(container, initialOffset);
         // Create lines above the central line
