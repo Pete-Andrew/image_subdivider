@@ -21,6 +21,7 @@ $(document).ready(function () {
     const lineColourButton = document.getElementById('lineColourButton');
     const testColourDiv = document.getElementById('testColourDiv');
     const lineWeightButton = document.getElementById('lineWeightButton');
+    const gridSliderUpButton = document.getElementById('gridSliderUpButton');
     
     // variables that deal with line spacing
     let containerHeight = imageView.clientHeight; // Get the container height
@@ -33,8 +34,8 @@ $(document).ready(function () {
     
     let scaleSliderValue = parseFloat(scaleSlider.val()); // Initialize scale value
     // console.log("scale slider value = " + scaleSliderValue);
-    let lineCount = 0; // Default number of horizontal lines
-    let spacingPixels = 0; // Adjust this value as needed
+    let hzLineNum = 0; // Default number of horizontal lines
+    let spacingPixels = 0; // sets the spacing between gridlines, taken from the distance between vertlines
     let totalImageViewWidth = 0;
     let totalImageViewHeight = 0;
     let widthMinusLines = 0;
@@ -131,20 +132,21 @@ $(document).ready(function () {
             // changes the container to be the size of the image
             container = testColourDiv;
             // sets size of test div
-            setTestDivSize();      
-           
+            setTestDivSize();
+            // draws the vert parallel lines      
             createParallelLines(container, vertLineNum);
 
-            spacingPixels = testColourDivWidth / (vertLineNum - 1);
-            lineCount = testColourDivHeight / spacingPixels; // 
+            spacingPixels = testColourDivWidth / (vertLineNum - 1); //constrains grid lines to a square
+            hzLineNum = testColourDivHeight / spacingPixels; // need to round this to an even number.....
             
             if (showHzLines == true) {
-            createHzParallelLines(container, lineCount, spacingPixels); 
+            createHzParallelLines(container, hzLineNum, spacingPixels); 
             }
             
         }
     });
 
+    // sets the size of the 'image only' test div
     function setTestDivSize() {
         if (backgroundImgDivProportions < imageProportionHTW) {
             // height > width
@@ -365,14 +367,19 @@ $(document).ready(function () {
         
         console.log("spacing pixels value = " + spacingPixels)
         console.log("testColourDivHeight value = " + testColourDivHeight);
-        lineCount = (testColourDivHeight / spacingPixels);
-        console.log("line Count = " + lineCount);    
+        
+        // hzLineNum = (testColourDivHeight / spacingPixels);
+        let hzLineNumRaw = vertLineNum * imageProportionHTW
+        console.log("raw Hz line Count = " + hzLineNumRaw);
+        hzLineNum = Math.floor(vertLineNum * imageProportionHTW);
+        
+        // if this number is even there is a line missing from the bottom 
+
+        console.log("rounded Hz line Count = " + hzLineNum);    
 
         } else if (testDivVisible == false) {
-        lineCount = vertLineNum * 3; // *3 makes sure there are always enough horizontal grid lines (unless the image is ridiculously distorted)
+        hzLineNum = vertLineNum * 3; // *3 makes sure there are always enough horizontal grid lines (unless the image is ridiculously distorted)
         }
-
-        // lineCount = vertLineNum * 3; // *3 makes sure there are always enough horizontal grid lines (unless the image is ridiculously distorted)
         
         console.log("vertLineNum = " + vertLineNum);
         console.log("Container width = " + container.offsetWidth + " px");
@@ -387,8 +394,12 @@ $(document).ready(function () {
         console.log("line spacing in PX = " + spacingPixels);
     }
         createParallelLines(container, vertLineNum); // Recreate lines
-        if (showHzLines == true) { createHzParallelLines(container, lineCount, spacingPixels); };
+        if (showHzLines == true) { createHzParallelLines(container, hzLineNum, spacingPixels); };
     });
+
+    gridSliderUpButton.addEventListener('click', function () {
+        console.log("grid slider up button clicked");
+        })
 
     imageView.addEventListener("mousedown", startDragging);
     imageView.addEventListener("mousemove", drag);
@@ -499,12 +510,12 @@ $(document).ready(function () {
         if (testDivVisible == false) {
             getImageViewWidth(imageView); // updates the totalImageView width global variable. 
             spacingPixels = totalImageViewWidth / (vertLineNum - 1); // have to -1 to get the correct scale e.g. make all the division cubes / square
-            if (showHzLines) { createHzParallelLines(container, lineCount*3, spacingPixels); } //calls this function with updated spacing pixels IF showHzLines bool is true. 
+            if (showHzLines) { createHzParallelLines(container, hzLineNum*3, spacingPixels); } //calls this function with updated spacing pixels IF showHzLines bool is true. 
         } else if (testDivVisible == true) {
             // container = testColourDiv;
             spacingPixels = testColourDivWidth / (vertLineNum - 1);
             console.log("test div is visible");
-            if (showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); } //calls this function with updated spacing pixels IF showHzLines bool is true. 
+            if (showHzLines) { createHzParallelLines(container, hzLineNum, spacingPixels); } //calls this function with updated spacing pixels IF showHzLines bool is true. 
         }
 
         
@@ -562,12 +573,15 @@ $(document).ready(function () {
 
         // Create the central line
         createHorizontalLine(container, initialOffset);
+
+        let topAndBottomHzLinesCount = Math.ceil(count / 2);
+
         // Create lines above the central line
-        for (let i = 1; i < Math.ceil(count / 2); i++) {
+        for (let i = 1; i < topAndBottomHzLinesCount+1; i++) {
             createHorizontalLine(container, initialOffset - i * spacingPixels);
         }
         // Create lines below the central line
-        for (let i = 1; i < Math.floor(count / 2); i++) {
+        for (let i = 1; i < topAndBottomHzLinesCount+1; i++) { 
             createHorizontalLine(container, initialOffset + i * spacingPixels);
         }
     }
@@ -601,7 +615,7 @@ $(document).ready(function () {
             styleSheet.insertRule('.line { width: 0px !important; }', styleSheet.cssRules.length);
             
             createParallelLines(container, vertLineNum); // Recreate lines
-            if (showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); };
+            if (showHzLines) { createHzParallelLines(container, hzLineNum, spacingPixels); };
             console.log("hide vert grid lines has been clicked! woo!");
             showVertLines = !showVertLines;
             console.log(showVertLines);
@@ -610,7 +624,7 @@ $(document).ready(function () {
             var styleSheet = document.styleSheets[0];
             styleSheet.insertRule('.line { width: 1px !important; }', styleSheet.cssRules.length);
             createParallelLines(container, vertLineNum); // Recreate lines
-            if (!showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); };
+            if (!showHzLines) { createHzParallelLines(container, hzLineNum, spacingPixels); };
             console.log("verticalGridToggleButton has been clicked! woo!");
             showVertLines = true;
         }
