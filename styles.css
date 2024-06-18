@@ -149,7 +149,7 @@ background-color: #F5F5F5;
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: rgba(248, 248, 248, 0.897);
+    background-color: rgba(248, 248, 248, 0.5);
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;

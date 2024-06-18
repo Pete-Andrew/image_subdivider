@@ -74,6 +74,11 @@ $(document).ready(function () {
     
     container.style.display = "none";
 
+    // BUGS! 
+    // 1. Image only grid sometimes lacks enough vertical lines, seems to work fine when the slider is decreased but not increased!
+    // 2. Switching to 'image only' causes the grid lines to be fatter. Because of this they appear off-centered
+    // 3. if you re-size the screen in 'image only' mode, when you change back to full screen mode the proportions of the cubes is broken
+
 // changes the line colour from black to white by inserting rules into the CSS
     lineColourButton.addEventListener('click', function () {
         console.log("line colour has been changed");
@@ -93,29 +98,30 @@ $(document).ready(function () {
         }
     });
 
-
     // switches the grid between 'image only' and full div width 
     gridFullWidthButton.addEventListener('click', function () {
         // toggles the button
         gridFullContainerWidth = !gridFullContainerWidth;
         gridFullWidthButton.textContent = gridFullContainerWidth ? "Image Only Grid" : "Full Grid";
-        // hides or reveals the div
+        
+        //Hides the 'image only' div 
         if (testDivVisible == true) {
             testColourDiv.style.display = "none";
             // clears the testDiv and re-assigns the 'container' variable to the 'verticalLineDiv' ID
             container.innerHTML = '';
             container = document.getElementById('verticalLineDiv');
-
             testDivVisible = false;
-            console.log("test Div Visible = " + testDivVisible);       
-
-            createParallelLines(container, vertLineNum);
+            console.log("test Div Visible = " + testDivVisible);
+                      
             spacingPixels = totalImageViewWidth / (vertLineNum - 1); // have to -1 to get the correct scale e.g. make all the division cubes
-            
-            if (showHzLines == true) {
-            createHzParallelLines(container, vertLineNum, spacingPixels); 
+            createParallelLines(container, vertLineNum);
+
+            if (showHzLines == true) {      
+            //vertLineNum needs to be * 3 or it only uses the vertline number and you end up with not enough hz lines    
+            createHzParallelLines(container, vertLineNum*3, spacingPixels); 
         }
 
+        // Reveals the 'image only' div
         } else if (testDivVisible == false) {
             testColourDiv.style.display = "block";
             testDivVisible = true;
@@ -125,20 +131,17 @@ $(document).ready(function () {
             // changes the container to be the size of the image
             container = testColourDiv;
             // sets size of test div
-            setTestDivSize();
-            
-            
-            lineCount = vertLineNum * 3; // need to add this *3 or there are not enough hz lines
-            // how to get rid of extra lines? 
-            // lineCount = vertLineNum * imageProportionHTW;
-
+            setTestDivSize();      
+           
             createParallelLines(container, vertLineNum);
+
             spacingPixels = testColourDivWidth / (vertLineNum - 1);
+            lineCount = testColourDivHeight / spacingPixels; // 
             
             if (showHzLines == true) {
             createHzParallelLines(container, lineCount, spacingPixels); 
             }
-            // needs a listener to check for image size if the screen is re-sized e.g IF (imageViewDiv.width < imageViewDiv.height )
+            
         }
     });
 
@@ -357,7 +360,20 @@ $(document).ready(function () {
     // need to reset slider when swapping between 'image only' and full screen
     $("#gridLineScaleSlider").on("input", function () {
         vertLineNum = $(this).val();
+        
+        if (testDivVisible == true) {
+        
+        console.log("spacing pixels value = " + spacingPixels)
+        console.log("testColourDivHeight value = " + testColourDivHeight);
+        lineCount = (testColourDivHeight / spacingPixels);
+        console.log("line Count = " + lineCount);    
+
+        } else if (testDivVisible == false) {
         lineCount = vertLineNum * 3; // *3 makes sure there are always enough horizontal grid lines (unless the image is ridiculously distorted)
+        }
+
+        // lineCount = vertLineNum * 3; // *3 makes sure there are always enough horizontal grid lines (unless the image is ridiculously distorted)
+        
         console.log("vertLineNum = " + vertLineNum);
         console.log("Container width = " + container.offsetWidth + " px");
         container.innerHTML = ''; // Clear existing lines    
@@ -483,14 +499,15 @@ $(document).ready(function () {
         if (testDivVisible == false) {
             getImageViewWidth(imageView); // updates the totalImageView width global variable. 
             spacingPixels = totalImageViewWidth / (vertLineNum - 1); // have to -1 to get the correct scale e.g. make all the division cubes / square
-
-        } else {
+            if (showHzLines) { createHzParallelLines(container, lineCount*3, spacingPixels); } //calls this function with updated spacing pixels IF showHzLines bool is true. 
+        } else if (testDivVisible == true) {
             // container = testColourDiv;
             spacingPixels = testColourDivWidth / (vertLineNum - 1);
             console.log("test div is visible");
+            if (showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); } //calls this function with updated spacing pixels IF showHzLines bool is true. 
         }
 
-        if (showHzLines) { createHzParallelLines(container, lineCount, spacingPixels); } //calls this function with updated spacing pixels IF showHzLines bool is true. 
+        
     }
 
     //resizes the grid if the window size is changed
@@ -527,8 +544,9 @@ $(document).ready(function () {
         container.appendChild(hzLine);
     }
 
+
     function createHzParallelLines(container, count, spacingPixels) {
-        
+        // this if statement allows the hz grid lines to be vertically centralised in the div
         if (testDivVisible == true) {
         containerHeight = testColourDivHeight; // Get the container height
         centerOffset = containerHeight / 2; // Calculate the center position
@@ -539,7 +557,7 @@ $(document).ready(function () {
         containerHeight = imageView.clientHeight; // Get the container height
         centerOffset = containerHeight / 2; // Calculate the center position
         // Calculate the initial offset for the first line to be at the center
-        initialOffset = centerOffset;
+        initialOffset = centerOffset;    
         }
 
         // Create the central line
@@ -554,7 +572,6 @@ $(document).ready(function () {
         }
     }
 
-    //hiding HZ lines causing issues when you change from 'image only' to full grid
     //clear all lines and re-draw only vertical lines. 
     horizontalGridToggleButton.addEventListener("click", function () {
         
