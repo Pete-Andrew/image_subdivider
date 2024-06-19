@@ -17,28 +17,28 @@ $(document).ready(function () {
     const openNavButton = document.getElementById('openNavButton');
     const closeNavButton = document.getElementById('closeNavButton');
     const scaleSlider = $('#scaleSlider');
+    const gridLineSlider = $('#gridLineScaleSlider');
     const gridFullWidthButton = document.getElementById('gridFullWidthToggleButton');
     const lineColourButton = document.getElementById('lineColourButton');
     const testColourDiv = document.getElementById('testColourDiv');
     const lineWeightButton = document.getElementById('lineWeightButton');
     const gridSliderUpButton = document.getElementById('gridSliderUpButton');
+    const gridSliderDownButton = document.getElementById('gridSliderDownButton');
     
     // variables that deal with line spacing
     let containerHeight = imageView.clientHeight; // Get the container height
     let centerOffset = containerHeight / 2; // Calculate the center position
     // Calculate the initial offset for the first line to be at the center
     let initialOffset = centerOffset;
-
     let container = document.getElementById('verticalLineDiv');
     let grid = document.getElementById("verticalLineDiv");
     
     let scaleSliderValue = parseFloat(scaleSlider.val()); // Initialize scale value
-    // console.log("scale slider value = " + scaleSliderValue);
+    let gridSliderValue = parseFloat(gridLineSlider.val()); // Initialize grid slider value
     let hzLineNum = 0; // Default number of horizontal lines
     let spacingPixels = 0; // sets the spacing between gridlines, taken from the distance between vertlines
     let totalImageViewWidth = 0;
     let totalImageViewHeight = 0;
-    let widthMinusLines = 0;
     let imgWidth = 0;
     let imgHeight = 0;
     let vertLineNum = 3;
@@ -66,10 +66,9 @@ $(document).ready(function () {
     let paused = false;
     let cameraOn = false;
     let gridFullContainerWidth = true;
-    let imgLoaded = false;
     let testDivVisible = false;
     let lineColourWhite = false; 
-    let lineWeight = 1;
+  
     
     let currentFacingMode = 'user'; // Default to front camera
     
@@ -225,7 +224,6 @@ $(document).ready(function () {
                     console.log("height of background image Div = " + backgroundImageDivHeight);
                     backgroundImgDivProportionFunc();
                     findImportedImageScalingPx();
-
                 };
 
                 img.onerror = function () {
@@ -234,7 +232,6 @@ $(document).ready(function () {
 
                 // Log the name of the uploaded file
                 // console.log("Name of the uploaded image: " + file.name);
-
                 img.src = URL.createObjectURL(file);
                 imgLoaded = true;
                 // console.log("image loaded = " + imgLoaded);
@@ -243,20 +240,13 @@ $(document).ready(function () {
     };
     getSize();
 
-    // extra possible functions:
-    //button to set the grid lines to the size of the image rather than the container... 
-    //save image/location/scaling info in local data
-
     //gets the width of the 'imageView' div, which holds the image
     function getImageViewWidth(imageView) {
         totalImageViewWidth = Number(imageView.offsetWidth);
         totalImageViewHeight = Number(imageView.offsetHeight);
         console.log("Image View width = " + totalImageViewWidth);
         console.log("Image View height = " + totalImageViewHeight);
-
     }
-    // getImageViewWidth(imageView); //doesn't need to be called here as it is also called in the measure line spaces function
-
 
     // uploads the image as either a drag and drop or an open file
     function uploadImage(file) {
@@ -279,7 +269,6 @@ $(document).ready(function () {
         console.log("proportion of full size = " + scale);
         
     // measureLineSpace(container, vertLineNum);
-
         if (backgroundImgDivProportions < imageProportionHTW) {
             testColourDiv.style.height = (backgroundImage.offsetHeight * scale) + "px";
             testColourDiv.style.width = (backgroundImageDivHeight * imageProportionWTH) * scale + "px";
@@ -296,7 +285,6 @@ $(document).ready(function () {
         // console.log("current scale = " + scale);
         scaleSliderValue = scale;
         updateBackgroundScale(scale);
-
     });
 
     //code for the course and fine size scale buttons 
@@ -343,7 +331,6 @@ $(document).ready(function () {
         }
     });
 
-
     fineSizeDownButton.addEventListener('click', function () {
         if (scale > 0.1) {
             scale -= 0.0005;
@@ -356,23 +343,18 @@ $(document).ready(function () {
         }
     });
 
-    // updates the grid lines when the slider is changed
-    // need to reset slider when swapping between 'image only' and full screen
-    $("#gridLineScaleSlider").on("input", function () {
-        vertLineNum = $(this).val();
+    // changes the grid density when called.
+    function changeGridDensity () {
         
         if (testDivVisible == true) {
         
         console.log("spacing pixels value = " + spacingPixels)
         console.log("testColourDivHeight value = " + testColourDivHeight);
         
-        // hzLineNum = (testColourDivHeight / spacingPixels);
         let hzLineNumRaw = vertLineNum * imageProportionHTW
         console.log("raw Hz line Count = " + hzLineNumRaw);
         hzLineNum = Math.floor(vertLineNum * imageProportionHTW);
         
-        // if this number is even there is a line missing from the bottom 
-
         console.log("rounded Hz line Count = " + hzLineNum);    
 
         } else if (testDivVisible == false) {
@@ -393,11 +375,43 @@ $(document).ready(function () {
     }
         createParallelLines(container, vertLineNum); // Recreate lines
         if (showHzLines == true) { createHzParallelLines(container, hzLineNum, spacingPixels); };
+    }
+
+    // updates the grid lines when the slider is changed
+    $("#gridLineScaleSlider").on("input", function () {
+        gridSliderValue = parseFloat($(this).val()); //need to be parsed or the gridSLider buttons don't work
+        console.log("Grid slider value = " + gridSliderValue); 
+        vertLineNum = $(this).val();
+        changeGridDensity();        
     });
 
+    // buttons for updating grid density 
     gridSliderUpButton.addEventListener('click', function () {
-        console.log("grid slider up button clicked");
-        })
+        if (gridSliderValue < 59) {
+            console.log("grid slider up button clicked");
+            gridSliderValue += 2;
+            vertLineNum = gridSliderValue;
+            console.log("Grid slider value = " + gridSliderValue);
+            gridLineSlider.val(gridSliderValue);
+            changeGridDensity();
+        }
+        else {
+            console.log("max value reached");
+        }
+    })
+
+    gridSliderDownButton.addEventListener('click', function () {
+        if (gridSliderValue > 3) {
+            console.log("grid slider down button clicked");
+            gridSliderValue -= 2;
+            vertLineNum = gridSliderValue;
+            console.log("Grid slider value = " + gridSliderValue);
+            gridLineSlider.val(gridSliderValue);
+            changeGridDensity();
+        } else {
+            console.log("min value reached");
+        }
+    });
 
     imageView.addEventListener("mousedown", startDragging);
     imageView.addEventListener("mousemove", drag);
@@ -515,8 +529,6 @@ $(document).ready(function () {
             console.log("test div is visible");
             if (showHzLines) { createHzParallelLines(container, hzLineNum, spacingPixels); } //calls this function with updated spacing pixels IF showHzLines bool is true. 
         }
-
-        
     }
 
     //resizes the grid if the window size is changed
@@ -524,9 +536,7 @@ $(document).ready(function () {
 
         backgroundImgDivProportionFunc(); // gets the proportions of the image div
         setTestDivSize(); //sets the size of the test div
-        
         updateGrid(container);
-       
     });
 
     // functions for creating the lines
@@ -553,7 +563,6 @@ $(document).ready(function () {
         container.appendChild(hzLine);
     }
 
-
     function createHzParallelLines(container, count, spacingPixels) {
         // this if statement allows the hz grid lines to be vertically centralised in the div
         if (testDivVisible == true) {
@@ -572,6 +581,7 @@ $(document).ready(function () {
         // Create the central line
         createHorizontalLine(container, initialOffset);
 
+        //sets a count for both the top and bottom lines so that they are equal
         let topAndBottomHzLinesCount = Math.ceil(count / 2);
 
         // Create lines above the central line
@@ -584,7 +594,7 @@ $(document).ready(function () {
         }
     }
 
-    //clear all lines and re-draw only vertical lines. 
+    //toggle the Hz lines on / off. 
     horizontalGridToggleButton.addEventListener("click", function () {
         
         console.log("showHzLine = " + showHzLines);
@@ -599,7 +609,12 @@ $(document).ready(function () {
         } else {
             console.log("Un-hidden Hz Grid Lines");
             showHzLines = true;
-            createHzParallelLines(container, vertLineNum * 3, spacingPixels);
+            // if statement to change the hz line number if the test div is visible.
+            if (testDivVisible == true) { 
+                createHzParallelLines(container, hzLineNum, spacingPixels); 
+            } else { 
+                createHzParallelLines(container, vertLineNum*3, spacingPixels); 
+            }
         };
     });
 
@@ -632,7 +647,6 @@ $(document).ready(function () {
     function clearManipulations() {
         backgroundImage.style.backgroundPosition = "";
         backgroundImage.style.transform = "";
-
         offsetX = 0;
         offsetY = 0;
         backgroundImage.style.backgroundPosition = "center center";
@@ -643,11 +657,9 @@ $(document).ready(function () {
     reCenterToggleButton.addEventListener("click", function () {
         currentScaleFactor = scaleFactor;
         clearManipulations();
-
         // backgroundImage.style.backgroundPosition = "center center";
         console.log("Image re-centered.");
     });
-
 
     function reapplyScaleFactor() {
         let translateX = offsetX - (backgroundImage.offsetWidth / 2);
