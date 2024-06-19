@@ -76,11 +76,8 @@ $(document).ready(function () {
     container.style.display = "none";
 
     // BUGS! 
-    // 1. Image only grid sometimes lacks enough vertical lines, seems to work fine when the slider is decreased but not increased!
-    // 2. Switching to 'image only' causes the grid lines to be fatter. Because of this they appear off-centered
-    // 3. if you re-size the screen in 'image only' mode, when you change back to full screen mode the proportions of the cubes is broken
 
-// changes the line colour from black to white by inserting rules into the CSS
+    // changes the line colour from black to white by inserting rules into the CSS
     lineColourButton.addEventListener('click', function () {
         console.log("line colour has been changed");
 
@@ -113,7 +110,8 @@ $(document).ready(function () {
             container = document.getElementById('verticalLineDiv');
             testDivVisible = false;
             console.log("test Div Visible = " + testDivVisible);
-                      
+
+            getImageViewWidth(imageView);  
             spacingPixels = totalImageViewWidth / (vertLineNum - 1); // have to -1 to get the correct scale e.g. make all the division cubes
             createParallelLines(container, vertLineNum);
 
