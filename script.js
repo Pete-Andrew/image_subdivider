@@ -69,12 +69,12 @@ $(document).ready(function () {
     let testDivVisible = false;
     let lineColourWhite = false; 
   
-    
     let currentFacingMode = 'user'; // Default to front camera
     
     container.style.display = "none";
 
-    // BUGS! 
+    // list of BUGS! >>> 
+
 
     // changes the line colour from black to white by inserting rules into the CSS
     lineColourButton.addEventListener('click', function () {
@@ -139,7 +139,6 @@ $(document).ready(function () {
             if (showHzLines == true) {
             createHzParallelLines(container, hzLineNum, spacingPixels); 
             }
-            
         }
     });
 
@@ -202,14 +201,12 @@ $(document).ready(function () {
     });
 
     // get the size of the imported image
-
     function getSize() {
         $("#inputFile").change(function (e) {
             var file, img;
 
             if ((file = this.files[0])) {
-                img = new Image();
-
+                img = new Image(); //Image() constructor creates a new HTMLImageElement instance. It is functionally equivalent to document.createElement('img').
                 img.onload = function () {
 
                     imgWidth = this.width;
@@ -232,7 +229,7 @@ $(document).ready(function () {
 
                 // Log the name of the uploaded file
                 // console.log("Name of the uploaded image: " + file.name);
-                img.src = URL.createObjectURL(file);
+                img.src = URL.createObjectURL(file); //Each time you call createObjectURL(), a new object URL is created.
                 imgLoaded = true;
                 // console.log("image loaded = " + imgLoaded);
             }
@@ -533,7 +530,6 @@ $(document).ready(function () {
 
     //resizes the grid if the window size is changed
     window.addEventListener('resize', function () {
-
         backgroundImgDivProportionFunc(); // gets the proportions of the image div
         setTestDivSize(); //sets the size of the test div
         updateGrid(container);
@@ -679,7 +675,6 @@ $(document).ready(function () {
     async function startCamera(facingMode) {
         paused = false;
         pauseButton.textContent = "Pause";
-
         const video = document.getElementById('camera-feed');
 
         // Stop any existing video stream
