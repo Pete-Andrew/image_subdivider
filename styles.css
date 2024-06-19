@@ -159,8 +159,9 @@ background-color: #F5F5F5;
     height:100%;
   }
   
+  /* the about botton is in an anchor tag */
   .sidenav a {
-    padding: 8px 8px 8px 32px;
+    padding: 0px 0px 0px 0px;
     text-decoration: none;
     font-size: 25px;
     color: #818181;
@@ -183,4 +184,18 @@ background-color: #F5F5F5;
   @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
+  }
+  
+  .aboutImg {
+    width: 70%;
+    margin: auto;
+  }
+
+  #aboutDiv {
+    width: 100%;
+    text-align: center;
+  }
+
+  #homeButton {
+    margin-left: 10px;
   }

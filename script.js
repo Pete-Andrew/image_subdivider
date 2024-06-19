@@ -24,6 +24,10 @@ $(document).ready(function () {
     const lineWeightButton = document.getElementById('lineWeightButton');
     const gridSliderUpButton = document.getElementById('gridSliderUpButton');
     const gridSliderDownButton = document.getElementById('gridSliderDownButton');
+    const gridSliderUpButtonFour = document.getElementById('gridSliderUpButtonFour');
+    const gridSliderDownButtonFour = document.getElementById('gridSliderDownButtonFour');
+    const aboutButton = document.getElementById('aboutButton');
+
     
     // variables that deal with line spacing
     let containerHeight = imageView.clientHeight; // Get the container height
@@ -410,6 +414,38 @@ $(document).ready(function () {
         }
     });
 
+    gridSliderUpButtonFour.addEventListener('click', function () {
+        if (gridSliderValue < 59) {
+            console.log("grid slider up 4 button clicked");
+            gridSliderValue = (gridSliderValue*2)-1; //this doubles the number grid lines 
+            vertLineNum = gridSliderValue;
+            console.log("Grid slider value = " + gridSliderValue);
+            gridLineSlider.val(gridSliderValue);
+            changeGridDensity();
+        } else {
+
+            console.log("max value reached");
+        }
+    } )
+
+    gridSliderDownButtonFour.addEventListener('click', function () {
+        if (gridSliderValue > 3) {
+            console.log("grid slider up 4 button clicked");
+            gridSliderValue = (gridSliderValue+1)/2; 
+            vertLineNum = gridSliderValue;
+            console.log("Grid slider value = " + gridSliderValue);
+            gridLineSlider.val(gridSliderValue);
+            changeGridDensity();
+        } else {
+            // need to catch odd even numbers of gridsliderValue 
+            gridSliderValue = 3;
+            
+            console.log("min value reached");
+            console.log("Grid slider value = " + gridSliderValue);
+        }
+    } )
+
+
     imageView.addEventListener("mousedown", startDragging);
     imageView.addEventListener("mousemove", drag);
     imageView.addEventListener("mouseup", endDragging);
@@ -667,6 +703,9 @@ $(document).ready(function () {
         reapplyScaleFactor();
     });
 
+    aboutButton.addEventListener('click', function () {
+        console.log("about button clicked");
+    });
 
 // <------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
 
