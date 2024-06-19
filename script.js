@@ -437,13 +437,15 @@ $(document).ready(function () {
             gridLineSlider.val(gridSliderValue);
             changeGridDensity();
         } else {
-            // need to catch odd even numbers of gridsliderValue 
+            // need to catch even numbers of gridsliderValue 
+            // need to catch half numbers
+            // this only matters at the low end of the scale
             gridSliderValue = 3;
-            
+           
             console.log("min value reached");
             console.log("Grid slider value = " + gridSliderValue);
         }
-    } )
+    });
 
 
     imageView.addEventListener("mousedown", startDragging);
