@@ -27,8 +27,9 @@ $(document).ready(function () {
     const gridSliderUpButtonFour = document.getElementById('gridSliderUpButtonFour');
     const gridSliderDownButtonFour = document.getElementById('gridSliderDownButtonFour');
     const aboutButton = document.getElementById('aboutButton');
+    const resetButton = document.getElementById('resetButton');
+    const lineNumDisplay = document.getElementById('lineNumDisplay');
 
-    
     // variables that deal with line spacing
     let containerHeight = imageView.clientHeight; // Get the container height
     let centerOffset = containerHeight / 2; // Calculate the center position
@@ -375,7 +376,9 @@ $(document).ready(function () {
         console.log("line spacing in PX = " + spacingPixels);
     }
         createParallelLines(container, vertLineNum); // Recreate lines
-        if (showHzLines == true) { createHzParallelLines(container, hzLineNum, spacingPixels); };
+        if (showHzLines == true) { createHzParallelLines(container, hzLineNum, spacingPixels); 
+        };
+        lineNumberDisplay();
     }
 
     // updates the grid lines when the slider is changed
@@ -446,6 +449,22 @@ $(document).ready(function () {
             console.log("Grid slider value = " + gridSliderValue);
         }
     });
+
+    function lineNumberDisplay () {
+        lineNumDisplay.innerHTML = "Grid Line Number: " + vertLineNum;
+    }
+    lineNumberDisplay();
+
+    resetButton.addEventListener ('click', function () {
+        console.log("reset clicked");
+        //changed the grid slider
+        gridSliderValue = 3;
+        gridLineSlider.val(gridSliderValue);
+        //changed the value of vertical lines
+        vertLineNum = 3;
+        container.innerHTML = ''; // Clear existing lines    
+        changeGridDensity();
+    })
 
 
     imageView.addEventListener("mousedown", startDragging);

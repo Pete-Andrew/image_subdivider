@@ -5,6 +5,11 @@
     box-sizing: border-box;
 }
 
+.bold {
+  /* font-weight: bold; */
+  /* font-size: x-large; */
+}
+
 .hero {
     z-index: 0;
     position: relative;
@@ -198,4 +203,10 @@ background-color: #F5F5F5;
 
   #homeButton {
     margin-left: 10px;
+  }
+
+  #aboutDiv p {
+    margin-left: 10%;
+    margin-right: 10%;
+    
   }
