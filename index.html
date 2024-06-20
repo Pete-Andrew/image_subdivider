@@ -1,95 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Scale Adjustment</title>
     <link rel="stylesheet" href="styles.css"> <!-- Link the external CSS file -->
-    
 
 </head>
+
 <body>
-    
+
     <span style="font-size:30px;cursor:pointer" id="openNavButton">&#9776; Menu</span>
 
     <div id="mySidenav" class="sidenav">
         <div id="contentsOfSideNav">
-        <a href="javascript:void(0)" class="closebtn" id="closeNavButton">&times;</a>
-        <button hidden id="toggleButton" class="toggle-button">Enable Manual Move</button><br>
-        <button id="gridFullWidthToggleButton" class="toggle-button">Image Only Grid</button><br>
-        <button id="gridToggleButton" class="toggle-button">Show Grid</button><br>
-        <button id="horizontalGridToggleButton" class="toggle-button">Hide Hz Grid</button><br>
-        <button id="verticalGridToggleButton" class="toggle-button">Hide Vert Grid</button><br>       
-        <button id="reCenterToggleButton" class="toggle-button">Re-center</button><br><br>
+            <a href="javascript:void(0)" class="closebtn" id="closeNavButton">&times;</a>
+            <button hidden id="toggleButton" class="toggle-button">Enable Manual Move</button><br>
+            <button id="gridFullWidthToggleButton" class="toggle-button">Image Only Grid</button><br>
+            <button id="gridToggleButton" class="toggle-button">Show Grid</button><br>
+            <button id="horizontalGridToggleButton" class="toggle-button">Hide Hz Grid</button><br>
+            <button id="verticalGridToggleButton" class="toggle-button">Hide Vert Grid</button><br>
+            <button id="reCenterToggleButton" class="toggle-button">Re-center</button><br><br>
 
-        <!-- <label for="scaleSlider">Adjust Image Scale:</label><br>
+            <!-- <label for="scaleSlider">Adjust Image Scale:</label><br>
         <button class="toggle-button" id="courseSizeDown"> ◄◄ </button>
         <button class="toggle-button" id="fineSizeDown"> ◄ </button>
         <input type="range" min="0.1" max="2" step="0.001" value="1" class="slider" id="scaleSlider">
         <button class="toggle-button" id="fineSizeUp"> ► </button>
         <button class="toggle-button" id="courseSizeUp"> ►► </button><br><br> -->
 
-        <!-- <label style="font-weight: bold;" for="gridSlider">Gridline Number: </label>  -->
-        <p id="lineNumDisplay" style="font-size: x-large; font-weight: bold;"></p>
-        
-        <button class="toggle-button" id="gridSliderDownButtonFour"> ◄◄ </button>
-        <button class="toggle-button" id="gridSliderDownButton"> ◄ </button>
-        <input type="range" min="3" max="60" step="2" value="1" class="slider" id="gridLineScaleSlider">
-        <button class="toggle-button" id="gridSliderUpButton"> ► </button>
-        <button class="toggle-button" id="gridSliderUpButtonFour"> ►► </button>
-        <br>      
-        <button class="toggle-button" id="resetButton"> Reset </button> <br>
-        
-        <!-- <button id="lineWeightButton" class="toggle-button">Line Weight</button><br> -->
-        <button id="lineColourButton" class="toggle-button">Line Colour</button><br>
-        
-        
-        <!-- <button id="aboutButton" class="toggle-button">About</button> -->
-        <a href="about.html">
-        <button id="aboutButton" class="toggle-button">About</button>
-        </a>
-          
+            <!-- <label style="font-weight: bold;" for="gridSlider">Gridline Number: </label>  -->
+            <p id="lineNumDisplay" style="font-size: x-large; font-weight: bold;"></p>
 
-        <button hidden id="cameraOnButton" class="toggle-button">Camera On</button>
-        <button hidden id="toggle-camera-button" class="toggle-button">Switch Camera</button>
-        <button hidden id="pause-button" class="toggle-button">Pause</button>
-        <label hidden for="opacityScaleSlider">Video Opacity</label>
-        <input hidden type="range" min="1" max="10" step="1" value="1" class="slider" id="opacitySlider">
+            <button class="toggle-button" id="gridSliderDownButtonFour"> ◄◄ </button>
+            <button class="toggle-button" id="gridSliderDownButton"> ◄ </button>
+            <input type="range" min="3" max="60" step="2" value="1" class="slider" id="gridLineScaleSlider">
+            <button class="toggle-button" id="gridSliderUpButton"> ► </button>
+            <button class="toggle-button" id="gridSliderUpButtonFour"> ►► </button>
+            <br>
+            <button class="toggle-button" id="resetButton"> Reset </button> <br>
+
+            <!-- <button id="lineWeightButton" class="toggle-button">Line Weight</button><br> -->
+            <button id="lineColourButton" class="toggle-button">Line Colour</button><br>
+
+            <!-- <button id="aboutButton" class="toggle-button">About</button> -->
+            <a href="about.html">
+                <button id="aboutButton" class="toggle-button">About</button>
+            </a>
+
+            <button hidden id="cameraOnButton" class="toggle-button">Camera On</button>
+            <button hidden id="toggle-camera-button" class="toggle-button">Switch Camera</button>
+            <button hidden id="pause-button" class="toggle-button">Pause</button>
+            <label hidden for="opacityScaleSlider">Video Opacity</label>
+            <input hidden type="range" min="1" max="10" step="1" value="1" class="slider" id="opacitySlider">
         </div>
     </div>
 
-    <div class="hero"  >
-        <label for="inputFile" id="dropArea" >
+    <div class="hero">
+        <label for="inputFile" id="dropArea">
             <input type="file" accept="image/*" id="inputFile" hidden>
             <div id="imageView">
 
                 <video hidden id="camera-feed" autoplay playsinline></video>
-                
-                <!-- <div id="hiddenContainer" style="visibility: hidden; position: absolute; top: -9999px;"></div> -->
-                
-                <div id="backgroundImage"></div>     
-                
-                
-                    <div id="infoDiv">
-                        <p>Drag and drop or click here <br> to upload image</p>
-                    </div>              
 
-                    <div id="verticalLineDiv"></div> <!-- This div holds the vertical lines that appear over the background image -->               
-                    
-                    <div id="testColourDiv" hidden>           
+                <!-- <div id="hiddenContainer" style="visibility: hidden; position: absolute; top: -9999px;"></div> -->
+
+                <div id="backgroundImage"></div>
+
+                <div id="infoDiv">
+                    <p>Drag and drop or click here <br> to upload image</p>
+                </div>
+
+                <div id="verticalLineDiv"></div>
+                <!-- This div holds the vertical lines that appear over the background image -->
+
+                <div id="testColourDiv" hidden>
 
                 </div>
-                
-
-                
-
             </div>
         </label>
-        
     </div>
-
-
-
 
     <!-- when the buttons where all at the bottom, now a hidden div -->
     <div hidden>
@@ -111,11 +102,11 @@
         <button hidden id="toggle-camera-button" class="toggle-button">Switch Camera</button>
         <button hidden id="pause-button" class="toggle-button">Pause</button>
         <label hidden for="opacityScaleSlider">Video Opacity</label>
-        <input hidden type="range" min="1" max="10" step="1" value="1" class="slider" id="opacitySlider">        
+        <input hidden type="range" min="1" max="10" step="1" value="1" class="slider" id="opacitySlider">
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-   
     <script src="script.js"></script>
 </body>
+
 </html>

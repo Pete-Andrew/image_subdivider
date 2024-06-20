@@ -80,7 +80,6 @@ $(document).ready(function () {
 
     // list of BUGS! >>> 
 
-
     // changes the line colour from black to white by inserting rules into the CSS
     lineColourButton.addEventListener('click', function () {
         console.log("line colour has been changed");
@@ -379,7 +378,7 @@ $(document).ready(function () {
         if (showHzLines == true) { createHzParallelLines(container, hzLineNum, spacingPixels); 
         };
         lineNumberDisplay();
-    }
+    };
 
     // updates the grid lines when the slider is changed
     $("#gridLineScaleSlider").on("input", function () {
@@ -402,7 +401,7 @@ $(document).ready(function () {
         else {
             console.log("max value reached");
         }
-    })
+    });
 
     gridSliderDownButton.addEventListener('click', function () {
         if (gridSliderValue > 3) {
@@ -429,7 +428,7 @@ $(document).ready(function () {
 
             console.log("max value reached");
         }
-    } )
+    });
 
     gridSliderDownButtonFour.addEventListener('click', function () {
         if (gridSliderValue > 3) {
@@ -465,7 +464,6 @@ $(document).ready(function () {
         container.innerHTML = ''; // Clear existing lines    
         changeGridDensity();
     })
-
 
     imageView.addEventListener("mousedown", startDragging);
     imageView.addEventListener("mousemove", drag);
@@ -786,7 +784,6 @@ $(document).ready(function () {
             startCamera(currentFacingMode);
             console.log("video un-paused");
         }
-
     });
 
     // Start with the default camera
@@ -794,5 +791,4 @@ $(document).ready(function () {
         cameraOnButton.textContent = cameraOn ? "Camera Off" : "Camera On";
         startCamera(currentFacingMode);
     })
-
 });
